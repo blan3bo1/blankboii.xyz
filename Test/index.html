@@ -526,21 +526,18 @@
 
 function getPDTTime() {
     const now = new Date();
-    // PDT is UTC-7
-    const pdtOffset = -7 * 60; // PDT is UTC-7
-    const pdtTime = new Date(now.getTime() + (pdtOffset - now.getTimezoneOffset()) * 60000);
-    return pdtTime;
+    // Use the browser's built-in timezone support for Los Angeles
+    // This automatically handles PDT/PST
+    return new Date(now.toLocaleString("en-US", { timeZone: "America/Los_Angeles" }));
 }
 
 function getTimeOfDay() {
     const pdtTime = getPDTTime();
     const hours = pdtTime.getHours();
-    const minutes = pdtTime.getMinutes();
     
-    // Update time indicator
+    // Update time indicator with proper formatting
     const timeString = pdtTime.toLocaleTimeString('en-US', { 
-        timeZone: 'America/Los_Angeles',
-        hour: '2-digit',
+        hour: '2-digit', 
         minute: '2-digit',
         hour12: true 
     });
