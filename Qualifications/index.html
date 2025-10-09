@@ -118,6 +118,42 @@
             z-index: 1000;
         }
 
+        /* Back Button */
+        .back-button {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            background: rgba(255, 107, 53, 0.2);
+            border: 1px solid rgba(255, 107, 53, 0.4);
+            border-radius: 10px;
+            padding: 0.7rem 1.2rem;
+            color: #ff8e53;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 0 15px rgba(255, 107, 53, 0.2);
+        }
+
+        .back-button:hover {
+            background: rgba(255, 107, 53, 0.3);
+            border-color: rgba(255, 107, 53, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(255, 107, 53, 0.4);
+            color: #ffb38a;
+        }
+
+        .back-button::before {
+            content: '←';
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -294,6 +330,13 @@
                 font-size: 0.7rem;
                 padding: 0.3rem 0.7rem;
             }
+
+            .back-button {
+                top: 0.5rem;
+                left: 0.5rem;
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
@@ -302,6 +345,8 @@
     <div class="noise"></div>
     <div id="weather"></div>
     <div class="time-indicator" id="timeIndicator"></div>
+    
+    <a href="https://blankboii.xyz" class="back-button">Back</a>
 
     <div class="container">
         <div class="header">
@@ -383,29 +428,29 @@
         let currentWeatherType = '';
         let weatherInterval;
 
-        // Weather types with SLOWER generation
+        // Weather types with MUCH SLOWER generation
         const weatherTypes = {
             rain: {
                 create: createRaindrop,
                 types: ['raindrop'],
-                interval: 150, // Slower: was 50
+                interval: 500, // Much slower: was 150
                 directionRange: [-15, -10, -5, 0, 5, 10, 15],
-                duration: [3, 5] // 3-5 seconds (slower fall)
+                duration: [8, 12] // 8-12 seconds (much slower fall)
             },
             leaves: {
                 create: createLeaf,
                 types: ['🍂', '🍁', '🥮', '🌰'],
-                interval: 400, // Slower: was 200
+                interval: 800, // Much slower: was 400
                 directionRange: [-20, -15, -10, -5, 0, 5, 10, 15, 20],
                 colors: ['#ff6b35', '#ff8e53', '#ffaa00', '#e65c00', '#ff4444'],
-                duration: [4, 7] // 4-7 seconds (slower fall)
+                duration: [10, 15] // 10-15 seconds (much slower fall)
             },
             snow: {
                 create: createSnowflake,
                 types: ['❄', '❅', '❆'],
-                interval: 200, // Slower: was 80
+                interval: 600, // Much slower: was 200
                 directionRange: [-10, -8, -5, -3, 0, 3, 5, 8, 10],
-                duration: [5, 9] // 5-9 seconds (much slower fall)
+                duration: [12, 18] // 12-18 seconds (very slow fall)
             }
         };
 
