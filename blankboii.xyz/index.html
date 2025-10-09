@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blankboii - Portfolio</title>
+    <title>Blankboii</title>
     <link rel="icon" type="image/jpeg" href="https://i.imgur.com/h7E54if.jpeg">
     <style>
         * {
@@ -13,16 +13,55 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #fff;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: #000;
+            color: #fff;
             min-height: 100vh;
-            position: relative;
             overflow-x: hidden;
         }
 
-        #snowflakes {
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -3;
+            transition: background 2s ease-in-out;
+        }
+
+        .morning-bg {
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 200, 100, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(100, 180, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 220, 150, 0.05) 0%, transparent 50%);
+        }
+
+        .afternoon-bg {
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 165, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 200, 100, 0.05) 0%, transparent 50%);
+        }
+
+        .night-bg {
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(100, 120, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(180, 200, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 140, 255, 0.05) 0%, transparent 50%);
+        }
+
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.1'/%3E%3C/svg%3E");
+            z-index: -2;
+        }
+
+        #weather {
             position: fixed;
             top: 0;
             left: 0;
@@ -32,14 +71,31 @@
             z-index: -1;
         }
 
+        .raindrop {
+            position: absolute;
+            background: rgba(100, 180, 255, 0.6);
+            width: 1px;
+            height: 15px;
+            border-radius: 1px;
+            animation: fall linear forwards;
+        }
+
+        .leaf {
+            position: absolute;
+            font-size: 1.5rem;
+            user-select: none;
+            animation: fall linear forwards;
+            filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.3));
+        }
+
         .snowflake {
             position: absolute;
-            top: -10px;
-            color: #fff;
-            font-size: 1em;
+            color: #ffffff;
+            font-size: 1.2rem;
             user-select: none;
             opacity: 0.8;
             animation: fall linear forwards;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
         }
 
         @keyframes fall {
@@ -49,95 +105,186 @@
             }
         }
 
+        .time-indicator {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+        }
+
+        /* Hamburger Menu */
+        .hamburger-menu {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+        }
+
+        .hamburger-btn {
+            background: rgba(255, 107, 53, 0.2);
+            border: 1px solid rgba(255, 107, 53, 0.4);
+            border-radius: 15px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+        }
+
+        .hamburger-btn:hover {
+            background: rgba(255, 107, 53, 0.3);
+            border-color: rgba(255, 107, 53, 0.6);
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(255, 107, 53, 0.5);
+        }
+
+        .hamburger-line {
+            width: 25px;
+            height: 3px;
+            background: #ff6b35;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 5px rgba(255, 107, 53, 0.5);
+        }
+
+        .hamburger-btn:hover .hamburger-line {
+            background: #ff8e53;
+            box-shadow: 0 0 8px rgba(255, 107, 53, 0.7);
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
-            position: relative;
-            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
         .header {
             text-align: center;
-            color: white;
-            margin-bottom: 3rem;
+            margin-bottom: 4rem;
         }
 
         .name {
-            font-size: 3.5rem;
-            font-weight: bold;
+            font-size: 4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ff6b35 0%, #ff8e53 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 0.5rem;
-            text-shadow: 0 0 10px #667eea, 0 0 20px #667eea;
-            text-align: center;
+            letter-spacing: -0.02em;
+            text-shadow: 0 0 20px rgba(255, 107, 53, 0.5);
         }
 
         .title {
-            font-size: 1.5rem;
-            opacity: 0.9;
-            margin-bottom: 2rem;
-            color: #ccc;
-            text-align: center;
+            font-size: 1.2rem;
+            color: #ff8e53;
+            font-weight: 400;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(255, 142, 83, 0.3);
         }
 
-        .discord-status {
-            background: rgba(30, 30, 30, 0.9);
-            border-radius: 15px;
+        .status-section {
+            background: rgba(255, 107, 53, 0.05);
+            border: 1px solid rgba(255, 107, 53, 0.2);
+            border-radius: 20px;
             padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
-            border: 1px solid #333;
+            width: 100%;
+            max-width: 600px;
             backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.1);
+            margin-bottom: 3rem;
+        }
+
+        .status-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
         }
 
         .status-title {
-            color: #667eea;
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            text-align: center;
-            text-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 107, 53, 0.3);
         }
 
-        .discord-widget {
+        .live-indicator {
             display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
+            align-items: center;
+            gap: 0.5rem;
+            color: #ff6b35;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-shadow: 0 0 10px rgba(255, 107, 53, 0.5);
+        }
+
+        .live-dot {
+            width: 6px;
+            height: 6px;
+            background: #ff6b35;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 10px #ff6b35;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
         }
 
         .discord-profile {
             display: flex;
             align-items: center;
             gap: 1rem;
-            background: rgba(40, 40, 40, 0.8);
-            padding: 1.5rem;
-            border-radius: 10px;
-            border: 1px solid #444;
+            margin-bottom: 1.5rem;
         }
 
         .discord-avatar {
-            width: 80px;
-            height: 80px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
-            border: 3px solid #667eea;
+            border: 2px solid rgba(255, 107, 53, 0.4);
+            box-shadow: 0 0 15px rgba(255, 107, 53, 0.3);
         }
 
         .discord-info {
-            text-align: left;
             flex: 1;
         }
 
         .discord-username {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #fff;
-            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            text-shadow: 0 0 10px rgba(255, 107, 53, 0.3);
         }
 
         .discord-discriminator {
-            color: #888;
-            font-size: 1rem;
+            color: #ffb38a;
+            font-size: 0.9rem;
         }
 
-        .discord-status-indicator {
+        .status-indicator {
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -145,360 +292,382 @@
         }
 
         .status-dot {
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
+            box-shadow: 0 0 10px currentColor;
         }
 
-        .status-online { background: #43b581; }
-        .status-idle { background: #faa61a; }
-        .status-dnd { background: #f04747; }
-        .status-offline { background: #747f8d; }
+        .status-online { background: #ff6b35; color: #ff6b35; }
+        .status-idle { background: #ffaa00; color: #ffaa00; }
+        .status-dnd { background: #ff4444; color: #ff4444; }
+        .status-offline { background: #888; color: #888; }
 
-        .activities-container {
+        .activities {
             display: flex;
             flex-direction: column;
             gap: 1rem;
         }
 
-        .activity-section {
-            background: rgba(40, 40, 40, 0.8);
-            padding: 1.5rem;
-            border-radius: 10px;
-            border: 1px solid #444;
+        .activity {
+            background: rgba(255, 107, 53, 0.03);
+            border: 1px solid rgba(255, 107, 53, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 0 10px rgba(255, 107, 53, 0.05);
         }
 
         .activity-type {
-            color: #667eea;
-            font-size: 1.1rem;
-            margin-bottom: 1rem;
-            text-transform: capitalize;
-        }
-
-        .activity-item {
-            margin-bottom: 1rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid #333;
-        }
-
-        .activity-item:last-child {
-            margin-bottom: 0;
-            padding-bottom: 0;
-            border-bottom: none;
+            font-size: 0.8rem;
+            color: #ffb38a;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
         }
 
         .activity-name {
-            font-weight: bold;
-            color: #fff;
-            margin-bottom: 0.5rem;
-            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            text-shadow: 0 0 5px rgba(255, 107, 53, 0.2);
         }
 
         .activity-details {
-            color: #ccc;
-            margin-bottom: 0.3rem;
-        }
-
-        .activity-state {
-            color: #888;
+            color: #ffb38a;
             font-size: 0.9rem;
-            margin-bottom: 0.3rem;
+            margin-bottom: 0.25rem;
         }
 
         .spotify-progress {
-            margin-top: 1rem;
+            margin-top: 0.75rem;
         }
 
         .progress-bar {
             width: 100%;
-            height: 6px;
-            background: #333;
-            border-radius: 3px;
+            height: 4px;
+            background: rgba(255, 107, 53, 0.2);
+            border-radius: 2px;
             overflow: hidden;
             margin-bottom: 0.5rem;
         }
 
         .progress-fill {
             height: 100%;
-            background: #667eea;
-            border-radius: 3px;
+            background: #ff6b35;
+            border-radius: 2px;
             transition: width 1s linear;
+            box-shadow: 0 0 10px #ff6b35;
         }
 
         .progress-time {
             display: flex;
             justify-content: space-between;
-            color: #888;
-            font-size: 0.8rem;
+            color: #ffb38a;
+            font-size: 0.7rem;
         }
 
         .no-activity {
-            color: #888;
-            font-style: italic;
+            color: #ffb38a;
             text-align: center;
+            font-style: italic;
             padding: 1rem;
         }
 
-        .section {
-            background: rgba(30, 30, 30, 0.9);
-            border-radius: 15px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
-            border: 1px solid #333;
-            backdrop-filter: blur(10px);
-        }
-
-        .section-title {
-            color: #667eea;
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            border-bottom: 3px solid #667eea;
-            padding-bottom: 0.5rem;
-            text-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
-        }
-
-        .about-text {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: #ccc;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 1rem;
-        }
-
-        .card {
-            background: rgba(40, 40, 40, 0.8);
-            padding: 1.5rem;
-            border-radius: 10px;
-            border-left: 4px solid #667eea;
-            border: 1px solid #444;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        .card h3 {
-            color: #667eea;
-            margin-bottom: 1rem;
-            text-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
-        }
-
-        .card p {
-            color: #ccc;
-            line-height: 1.6;
-        }
-
-        .skill-list {
-            list-style: none;
-            margin-top: 0.5rem;
-        }
-
-        .skill-list li {
-            margin-bottom: 0.3rem;
-            padding-left: 1rem;
-            position: relative;
-        }
-
-        .skill-list li:before {
-            content: "▸";
-            color: #667eea;
-            position: absolute;
-            left: 0;
-        }
-
-        .learning-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .skill-item {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 1rem;
-            border-radius: 8px;
+        .footer {
+            margin-top: 3rem;
             text-align: center;
-            font-weight: bold;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: 1px solid #667eea;
-        }
-
-        .skill-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.6);
-            background: linear-gradient(135deg, #764ba2, #667eea);
-        }
-
-        .contact {
-            text-align: center;
-            background: rgba(44, 62, 80, 0.9);
-            color: white;
-            padding: 2rem;
-            border-radius: 15px;
-            border: 1px solid #444;
-        }
-
-        .contact a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: bold;
-            transition: color 0.3s ease;
-        }
-
-        .contact a:hover {
-            color: #fff;
-            text-shadow: 0 0 10px #667eea;
-        }
-
-        .loading {
-            color: #ccc;
-            font-style: italic;
-        }
-
-        .activity-icon {
-            margin-right: 0.5rem;
+            color: #ff8e53;
+            font-size: 0.8rem;
+            text-shadow: 0 0 10px rgba(255, 142, 83, 0.3);
         }
 
         @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+
             .name {
                 font-size: 2.5rem;
             }
-            
-            .container {
-                padding: 1rem;
-            }
-            
-            .grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .learning-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
+
             .discord-profile {
                 flex-direction: column;
                 text-align: center;
+            }
+
+            .time-indicator {
+                top: 0.5rem;
+                right: 0.5rem;
+                font-size: 0.7rem;
+                padding: 0.3rem 0.7rem;
+            }
+
+            .hamburger-menu {
+                bottom: 1rem;
+                right: 1rem;
+            }
+
+            .hamburger-btn {
+                width: 55px;
+                height: 55px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hamburger-btn {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .hamburger-line {
+                width: 20px;
             }
         }
     </style>
 </head>
 <body>
-    <div id="snowflakes"></div>
+    <div class="background" id="background"></div>
+    <div class="noise"></div>
+    <div id="weather"></div>
+    <div class="time-indicator" id="timeIndicator"></div>
 
     <div class="container">
         <div class="header">
             <h1 class="name">Blankboii</h1>
-            <p class="title">a computer intelligence student</p>
+            <p class="title">Computer Intelligence Student</p>
         </div>
 
-        <div class="discord-status">
-            <h2 class="status-title">Live Discord Status</h2>
-            <div class="discord-widget">
-                <div class="discord-profile">
-                    <img id="discord-avatar" src="" alt="Discord Avatar" class="discord-avatar">
-                    <div class="discord-info">
-                        <div class="discord-username" id="discord-username">Loading...</div>
-                        <div class="discord-discriminator" id="discord-discriminator">#0000</div>
-                        <div class="discord-status-indicator">
-                            <div class="status-dot" id="status-dot"></div>
-                            <span id="status-text">Loading...</span>
-                        </div>
+        <div class="status-section">
+            <div class="status-header">
+                <div class="status-title">Discord Status</div>
+                <div class="live-indicator">
+                    <div class="live-dot"></div>
+                    LIVE
+                </div>
+            </div>
+
+            <div class="discord-profile">
+                <img id="discord-avatar" src="" alt="Discord Avatar" class="discord-avatar">
+                <div class="discord-info">
+                    <div class="discord-username" id="discord-username">Loading...</div>
+                    <div class="discord-discriminator" id="discord-discriminator">#0000</div>
+                    <div class="status-indicator">
+                        <div class="status-dot" id="status-dot"></div>
+                        <span id="status-text">Loading...</span>
                     </div>
                 </div>
-                
-                <div class="activities-container" id="activities-container">
-                    <div class="loading">Loading activities...</div>
-                </div>
+            </div>
+
+            <div class="activities" id="activities-container">
+                <div class="no-activity">Loading activities...</div>
             </div>
         </div>
 
-        <div class="section">
-            <h2 class="section-title">Hello there!</h2>
-            <p class="about-text">
-                My name is blank I like to do many things including an apple device of game cheats such as sideloading, exploiting, penetration testing and many others.
-            </p>
+        <div class="footer">
+            © 2024 Blankboii. All rights reserved.
         </div>
+    </div>
 
-        <div class="section">
-            <h2 class="section-title">Qualifications</h2>
-            <div class="grid">
-                <div class="card">
-                    <h3>iOS Development & Security</h3>
-                    <p>Specialized in iOS ecosystem with expertise in:</p>
-                    <ul class="skill-list">
-                        <li><strong>Sideloading & App Signing:</strong> Extensive experience with AltStore, Sideloadly, and enterprise certificate management for deploying unsigned applications</li>
-                        <li><strong>Game Modification:</strong> Advanced Lua scripting for Roblox exploits and iOS game memory manipulation</li>
-                        <li><strong>Security Research:</strong> Penetration testing on iOS applications and network security analysis</li>
-                        <li><strong>IPAs & Decryption:</strong> Application decryption, modification, and repackaging for custom features</li>
-                    </ul>
-                </div>
-                <div class="card">
-                    <h3>Discord & Community Management</h3>
-                    <p>I have 2+ years of experience on Discord and 2+ months of being a moderator in 3 separate servers.</p>
-                    <ul class="skill-list">
-                        <li>Community engagement and user support</li>
-                        <li>Content moderation and conflict resolution</li>
-                        <li>Bot configuration and automation</li>
-                        <li>Server organization and role management</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="section">
-            <h2 class="section-title">Education On Discord</h2>
-            <p class="about-text">Gained extensive experience through community management and moderation on Discord platforms, developing skills in digital communication, technical support, and online community building through practical, hands-on experience.</p>
-        </div>
-
-        <div class="section">
-            <h2 class="section-title">What I Plan On Learning</h2>
-            <div class="learning-grid">
-                <div class="skill-item">Javascript</div>
-                <div class="skill-item">C++</div>
-                <div class="skill-item">HTML</div>
-                <div class="skill-item">Swift</div>
-                <div class="skill-item">Python</div>
-            </div>
-        </div>
-
-        <div class="contact">
-            <h2>Get In Touch</h2>
-            <p style="margin-top: 1rem; color: #ccc;">Interested in working together? Reach out to me!</p>
-            <p style="margin-top: 0.5rem;">Email: <a href="mailto:blan3bo1@gmail.com">blan3bo1@gmail.com</a></p>
-        </div>
+    <!-- Hamburger Menu -->
+    <div class="hamburger-menu">
+        <a href="https://blankboii.xyz/links" class="hamburger-btn" target="_blank">
+            <div class="hamburger-line"></div>
+            <div class="hamburger-line"></div>
+            <div class="hamburger-line"></div>
+        </a>
     </div>
 
     <script>
         const DISCORD_ID = '1353737272989581436';
+        let weatherDirection = 0;
+        let currentWeatherType = '';
+        let weatherInterval;
+
+        // Weather types with SLOWER generation
+        const weatherTypes = {
+            rain: {
+                create: createRaindrop,
+                types: ['raindrop'],
+                interval: 150, // Slower: was 50
+                directionRange: [-15, -10, -5, 0, 5, 10, 15],
+                duration: [3, 5] // 3-5 seconds (slower fall)
+            },
+            leaves: {
+                create: createLeaf,
+                types: ['🍂', '🍁', '🥮', '🌰'],
+                interval: 400, // Slower: was 200
+                directionRange: [-20, -15, -10, -5, 0, 5, 10, 15, 20],
+                colors: ['#ff6b35', '#ff8e53', '#ffaa00', '#e65c00', '#ff4444'],
+                duration: [4, 7] // 4-7 seconds (slower fall)
+            },
+            snow: {
+                create: createSnowflake,
+                types: ['❄', '❅', '❆'],
+                interval: 200, // Slower: was 80
+                directionRange: [-10, -8, -5, -3, 0, 3, 5, 8, 10],
+                duration: [5, 9] // 5-9 seconds (much slower fall)
+            }
+        };
+
+        function getPDTTime() {
+            const now = new Date();
+            // Use the browser's built-in timezone support for Los Angeles
+            // This automatically handles PDT/PST
+            return new Date(now.toLocaleString("en-US", { timeZone: "America/Los_Angeles" }));
+        }
+
+        function getTimeOfDay() {
+            const pdtTime = getPDTTime();
+            const hours = pdtTime.getHours();
+            
+            // Update time indicator with proper formatting
+            const timeString = pdtTime.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: true 
+            });
+            document.getElementById('timeIndicator').textContent = `PDT: ${timeString}`;
+            
+            // Determine time of day
+            if (hours >= 6 && hours < 12) {
+                return 'morning';
+            } else if (hours >= 12 && hours < 18) {
+                return 'afternoon';
+            } else {
+                return 'night';
+            }
+        }
+
+        function getWeatherType() {
+            const timeOfDay = getTimeOfDay();
+            
+            // Update background
+            const background = document.getElementById('background');
+            background.className = 'background';
+            background.classList.add(`${timeOfDay}-bg`);
+            
+            switch(timeOfDay) {
+                case 'morning':
+                    return 'rain';
+                case 'afternoon':
+                    return 'leaves';
+                case 'night':
+                    return 'snow';
+                default:
+                    return 'leaves';
+            }
+        }
+
+        function createRaindrop() {
+            const raindrop = document.createElement('div');
+            raindrop.classList.add('raindrop');
+            
+            const startX = Math.random() * 100;
+            raindrop.style.left = startX + 'vw';
+            const durationRange = weatherTypes.rain.duration;
+            const duration = Math.random() * (durationRange[1] - durationRange[0]) + durationRange[0];
+            raindrop.style.animationDuration = duration + 's';
+            raindrop.style.opacity = Math.random() * 0.6 + 0.2;
+            raindrop.style.height = Math.random() * 10 + 10 + 'px';
+            raindrop.style.transform = `rotate(${weatherDirection}deg)`;
+            
+            document.getElementById('weather').appendChild(raindrop);
+            
+            setTimeout(() => {
+                if (raindrop.parentNode) {
+                    raindrop.remove();
+                }
+            }, duration * 1000 + 1000);
+        }
+
+        function createLeaf() {
+            const leaf = document.createElement('div');
+            leaf.classList.add('leaf');
+            
+            const leafType = weatherTypes.leaves.types[Math.floor(Math.random() * weatherTypes.leaves.types.length)];
+            leaf.innerHTML = leafType;
+            
+            const startX = Math.random() * 100;
+            leaf.style.left = startX + 'vw';
+            const durationRange = weatherTypes.leaves.duration;
+            const duration = Math.random() * (durationRange[1] - durationRange[0]) + durationRange[0];
+            leaf.style.animationDuration = duration + 's';
+            leaf.style.opacity = Math.random() * 0.7 + 0.3;
+            leaf.style.fontSize = (Math.random() * 10 + 15) + 'px';
+            
+            const sway = (Math.random() - 0.5) * 10;
+            leaf.style.transform = `rotate(${weatherDirection + sway}deg)`;
+            
+            const randomColor = weatherTypes.leaves.colors[Math.floor(Math.random() * weatherTypes.leaves.colors.length)];
+            leaf.style.color = randomColor;
+            
+            document.getElementById('weather').appendChild(leaf);
+            
+            setTimeout(() => {
+                if (leaf.parentNode) {
+                    leaf.remove();
+                }
+            }, duration * 1000 + 1000);
+        }
 
         function createSnowflake() {
             const snowflake = document.createElement('div');
             snowflake.classList.add('snowflake');
-            snowflake.innerHTML = '❄';
-            snowflake.style.left = Math.random() * 100 + 'vw';
-            snowflake.style.animationDuration = Math.random() * 3 + 2 + 's';
-            snowflake.style.fontSize = Math.random() * 10 + 10 + 'px';
-            snowflake.style.opacity = Math.random() * 0.6 + 0.3;
             
-            document.getElementById('snowflakes').appendChild(snowflake);
+            const snowType = weatherTypes.snow.types[Math.floor(Math.random() * weatherTypes.snow.types.length)];
+            snowflake.innerHTML = snowType;
+            
+            const startX = Math.random() * 100;
+            snowflake.style.left = startX + 'vw';
+            const durationRange = weatherTypes.snow.duration;
+            const duration = Math.random() * (durationRange[1] - durationRange[0]) + durationRange[0];
+            snowflake.style.animationDuration = duration + 's';
+            snowflake.style.opacity = Math.random() * 0.8 + 0.2;
+            snowflake.style.fontSize = (Math.random() * 8 + 12) + 'px';
+            
+            const sway = (Math.random() - 0.5) * 5; // Less sway for snow
+            snowflake.style.transform = `rotate(${weatherDirection + sway}deg)`;
+            
+            document.getElementById('weather').appendChild(snowflake);
             
             setTimeout(() => {
-                snowflake.remove();
-            }, 5000);
+                if (snowflake.parentNode) {
+                    snowflake.remove();
+                }
+            }, duration * 1000 + 1000);
         }
 
-        function createSnowflakes() {
-            setInterval(createSnowflake, 100);
+        function createWeather() {
+            const weatherType = getWeatherType();
+            
+            // Clear existing weather and interval if type changed
+            if (weatherType !== currentWeatherType) {
+                clearInterval(weatherInterval);
+                document.getElementById('weather').innerHTML = '';
+                currentWeatherType = weatherType;
+            }
+            
+            // Create new weather element
+            weatherTypes[weatherType].create();
+        }
+
+        function startWeather() {
+            const weatherType = getWeatherType();
+            currentWeatherType = weatherType;
+            weatherInterval = setInterval(createWeather, weatherTypes[weatherType].interval);
+        }
+
+        function changeWeatherDirection() {
+            const weatherType = getWeatherType();
+            const directions = weatherTypes[weatherType].directionRange;
+            weatherDirection = directions[Math.floor(Math.random() * directions.length)];
+            
+            const elements = document.querySelectorAll('#weather > div');
+            elements.forEach(element => {
+                const sway = element.classList.contains('leaf') ? (Math.random() - 0.5) * 10 : 
+                            element.classList.contains('snowflake') ? (Math.random() - 0.5) * 5 : 0;
+                element.style.transition = 'transform 2s ease-in-out';
+                element.style.transform = `rotate(${weatherDirection + sway}deg)`;
+            });
         }
 
         function formatTime(seconds) {
@@ -529,26 +698,14 @@
 
         function getActivityType(type) {
             const types = {
-                0: 'playing',
-                1: 'streaming',
-                2: 'listening',
-                3: 'watching',
-                4: 'custom',
-                5: 'competing'
+                0: 'Playing',
+                1: 'Streaming',
+                2: 'Listening',
+                3: 'Watching',
+                4: 'Custom',
+                5: 'Competing'
             };
-            return types[type] || 'unknown';
-        }
-
-        function getActivityIcon(type) {
-            const icons = {
-                0: '🎮',
-                1: '📺',
-                2: '🎵',
-                3: '👀',
-                4: '💬',
-                5: '🏆'
-            };
-            return icons[type] || '📱';
+            return types[type] || 'Activity';
         }
 
         async function fetchDiscordStatus() {
@@ -612,12 +769,11 @@
 
             activities.forEach(activity => {
                 const activityType = getActivityType(activity.type);
-                const activityIcon = getActivityIcon(activity.type);
                 
                 let activityContent = `
                     <div class="activity-name">${activity.name}</div>
                     ${activity.details ? `<div class="activity-details">${activity.details}</div>` : ''}
-                    ${activity.state ? `<div class="activity-state">${activity.state}</div>` : ''}
+                    ${activity.state ? `<div class="activity-details">${activity.state}</div>` : ''}
                 `;
 
                 if (activity.type === 2 && activity.timestamps) {
@@ -638,11 +794,9 @@
                 }
 
                 activitiesHTML += `
-                    <div class="activity-section">
-                        <div class="activity-type">${activityIcon} ${activityType}</div>
-                        <div class="activity-item">
-                            ${activityContent}
-                        </div>
+                    <div class="activity">
+                        <div class="activity-type">${activityType}</div>
+                        ${activityContent}
                     </div>
                 `;
             });
@@ -651,21 +805,11 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            createSnowflakes();
+            startWeather();
+            setInterval(changeWeatherDirection, 15000);
+            setInterval(startWeather, 60000); // Check time every minute
             fetchDiscordStatus();
-            
             setInterval(fetchDiscordStatus, 1000);
-            
-            const cards = document.querySelectorAll('.card, .skill-item');
-            cards.forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-                setTimeout(() => {
-                    card.style.transition = 'all 0.6s ease';
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, index * 200);
-            });
         });
     </script>
 </body>
