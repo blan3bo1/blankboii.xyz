@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Links - Blankboii</title>
+    <link rel="icon" type="image/jpeg" href="https://i.imgur.com/h7E54if.jpeg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #000;
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 165, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 200, 100, 0.05) 0%, transparent 50%);
+            z-index: -3;
+        }
+
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.1'/%3E%3C/svg%3E");
+            z-index: -2;
+        }
+
+        #leaves {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .leaf {
+            position: absolute;
+            font-size: 1.5rem;
+            user-select: none;
+            animation: fall linear forwards;
+            filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.3));
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            background: rgba(255, 107, 53, 0.1);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            border-radius: 15px;
+            padding: 1rem 1.5rem;
+            text-decoration: none;
+            color: #fff;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            box-shadow: 0 0 15px rgba(255, 107, 53, 0.2);
+            z-index: 1000;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 107, 53, 0.2);
+            border-color: rgba(255, 107, 53, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(255, 107, 53, 0.4);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .name {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ff6b35 0%, #ff8e53 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+            text-shadow: 0 0 20px rgba(255, 107, 53, 0.5);
+        }
+
+        .title {
+            font-size: 1.1rem;
+            color: #ff8e53;
+            font-weight: 400;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(255, 142, 83, 0.3);
+        }
+
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+            margin-bottom: 3rem;
+        }
+
+        .link-card {
+            background: rgba(255, 107, 53, 0.05);
+            border: 1px solid rgba(255, 107, 53, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            text-decoration: none;
+            color: #fff;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.1);
+        }
+
+        .link-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 107, 53, 0.5), transparent);
+        }
+
+        .link-card:hover {
+            background: rgba(255, 107, 53, 0.1);
+            border-color: rgba(255, 107, 53, 0.4);
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px rgba(255, 107, 53, 0.3);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            filter: drop-shadow(0 0 10px rgba(255, 107, 53, 0.5));
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(255, 107, 53, 0.3);
+        }
+
+        .card-desc {
+            color: #ffb38a;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .card-username {
+            color: #ff8e53;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+
+        .footer {
+            text-align: center;
+            color: #ff8e53;
+            font-size: 0.8rem;
+            text-shadow: 0 0 10px rgba(255, 142, 83, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+
+            .name {
+                font-size: 2.5rem;
+            }
+
+            .links-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .link-card {
+                padding: 1.5rem;
+            }
+
+            .back-btn {
+                top: 1rem;
+                left: 1rem;
+                padding: 0.8rem 1.2rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .name {
+                font-size: 2rem;
+            }
+
+            .card-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background"></div>
+    <div class="noise"></div>
+    <div id="leaves"></div>
+
+    <a href="https://blankboii.xyz" class="back-btn">
+        ← Back to Home
+    </a>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="name">Blankboii</h1>
+            <p class="title">All My Links</p>
+        </div>
+
+        <div class="links-grid">
+            <a href="https://www.reddit.com/user/BIankboii/" class="link-card" target="_blank">
+                <div class="card-header">
+                    <span class="card-icon">👽</span>
+                    <div class="card-title">Reddit</div>
+                </div>
+                <div class="card-desc">Follow my Reddit profile for discussions and content</div>
+                <div class="card-username">u/BIankboii</div>
+            </a>
+
+            <a href="https://x.com/blan3bo1" class="link-card" target="_blank">
+                <div class="card-header">
+                    <span class="card-icon">🐦</span>
+                    <div class="card-title">Twitter</div>
+                </div>
+                <div class="card-desc">Follow me on Twitter for updates and thoughts</div>
+                <div class="card-username">@blan3bo1</div>
+            </a>
+
+            <a href="https://discord.com/users/1353737272989581436" class="link-card" target="_blank">
+                <div class="card-header">
+                    <span class="card-icon">💬</span>
+                    <div class="card-title">Discord</div>
+                </div>
+                <div class="card-desc">Connect with me on Discord for collaboration</div>
+                <div class="card-username">Blankboii</div>
+            </a>
+
+            <a href="https://github.com/blan3bo1" class="link-card" target="_blank">
+                <div class="card-header">
+                    <span class="card-icon">💻</span>
+                    <div class="card-title">GitHub</div>
+                </div>
+                <div class="card-desc">Explore my code repositories and projects</div>
+                <div class="card-username">@blan3bo1</div>
+            </a>
+
+            <a href="https://open.spotify.com/user/31rn6fe3mmxbcxelf6yxz7zvbysa?si=tBngSzkHTw2oqPLeqjENrw" class="link-card" target="_blank">
+                <div class="card-header">
+                    <span class="card-icon">🎵</span>
+                    <div class="card-title">Spotify</div>
+                </div>
+                <div class="card-desc">Check out my music taste and playlists</div>
+                <div class="card-username">Blankboii</div>
+            </a>
+
+            <a href="mailto:Blan3bo1@gmail.com" class="link-card">
+                <div class="card-header">
+                    <span class="card-icon">📧</span>
+                    <div class="card-title">Email</div>
+                </div>
+                <div class="card-desc">Send me an email for collaborations or questions</div>
+                <div class="card-username">Blan3bo1@gmail.com</div>
+            </a>
+
+            <a href="https://m.youtube.com/channel/UCuVGMQxM9NSPl5h_hus390A" class="link-card" target="_blank">
+                <div class="card-header">
+                    <span class="card-icon">📺</span>
+                    <div class="card-title">YouTube</div>
+                </div>
+                <div class="card-desc">Subscribe to my YouTube channel for content</div>
+                <div class="card-username">Blankboii</div>
+            </a>
+        </div>
+
+        <div class="footer">
+            © 2024 Blankboii. All rights reserved.
+        </div>
+    </div>
+
+    <script>
+        let leafDirection = 0;
+        const leafTypes = ['🍂', '🍁', '🥮', '🌰'];
+        const leafColors = ['#ff6b35', '#ff8e53', '#ffaa00', '#e65c00', '#ff4444'];
+
+        function createLeaf() {
+            const leaf = document.createElement('div');
+            leaf.classList.add('leaf');
+            
+            const leafType = leafTypes[Math.floor(Math.random() * leafTypes.length)];
+            leaf.innerHTML = leafType;
+            
+            const startX = Math.random() * 100;
+            leaf.style.left = startX + 'vw';
+            const duration = Math.random() * 3 + 4; // 4-7 seconds
+            leaf.style.animationDuration = duration + 's';
+            leaf.style.opacity = Math.random() * 0.7 + 0.3;
+            leaf.style.fontSize = (Math.random() * 10 + 15) + 'px';
+            
+            const sway = (Math.random() - 0.5) * 10;
+            leaf.style.transform = `rotate(${leafDirection + sway}deg)`;
+            
+            const randomColor = leafColors[Math.floor(Math.random() * leafColors.length)];
+            leaf.style.color = randomColor;
+            
+            document.getElementById('leaves').appendChild(leaf);
+            
+            setTimeout(() => {
+                if (leaf.parentNode) {
+                    leaf.remove();
+                }
+            }, duration * 1000 + 1000);
+        }
+
+        function createLeaves() {
+            setInterval(createLeaf, 400); // Create leaves slowly
+        }
+
+        function changeLeafDirection() {
+            const directions = [-20, -15, -10, -5, 0, 5, 10, 15, 20];
+            leafDirection = directions[Math.floor(Math.random() * directions.length)];
+            
+            const leaves = document.querySelectorAll('.leaf');
+            leaves.forEach(leaf => {
+                const sway = (Math.random() - 0.5) * 10;
+                leaf.style.transition = 'transform 2s ease-in-out';
+                leaf.style.transform = `rotate(${leafDirection + sway}deg)`;
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            createLeaves();
+            setInterval(changeLeafDirection, 15000);
+        });
+    </script>
+</body>
+</html>
