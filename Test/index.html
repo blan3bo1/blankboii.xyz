@@ -26,11 +26,29 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: 
-                radial-gradient(circle at 20% 80%, rgba(255, 107, 53, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(255, 165, 0, 0.03) 0%, transparent 50%);
             z-index: -3;
+            transition: background 2s ease-in-out;
+        }
+
+        .morning-bg {
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 200, 100, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(100, 180, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 220, 150, 0.05) 0%, transparent 50%);
+        }
+
+        .afternoon-bg {
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 165, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 200, 100, 0.05) 0%, transparent 50%);
+        }
+
+        .night-bg {
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(100, 120, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(180, 200, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 140, 255, 0.05) 0%, transparent 50%);
         }
 
         .noise {
@@ -43,7 +61,7 @@
             z-index: -2;
         }
 
-        #rain {
+        #weather {
             position: fixed;
             top: 0;
             left: 0;
@@ -55,18 +73,49 @@
 
         .raindrop {
             position: absolute;
-            background: rgba(120, 180, 255, 0.6);
+            background: rgba(100, 180, 255, 0.6);
             width: 1px;
             height: 15px;
             border-radius: 1px;
             animation: fall linear forwards;
         }
 
+        .leaf {
+            position: absolute;
+            font-size: 1.5rem;
+            user-select: none;
+            animation: fall linear forwards;
+            filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.3));
+        }
+
+        .snowflake {
+            position: absolute;
+            color: #ffffff;
+            font-size: 1.2rem;
+            user-select: none;
+            opacity: 0.8;
+            animation: fall linear forwards;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+
         @keyframes fall {
             to {
-                transform: translateY(100vh);
+                transform: translateY(100vh) rotate(360deg);
                 opacity: 0;
             }
+        }
+
+        .time-indicator {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
         }
 
         .container {
@@ -365,13 +414,21 @@
                 flex-direction: column;
                 text-align: center;
             }
+
+            .time-indicator {
+                top: 0.5rem;
+                right: 0.5rem;
+                font-size: 0.7rem;
+                padding: 0.3rem 0.7rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="background"></div>
+    <div class="background" id="background"></div>
     <div class="noise"></div>
-    <div id="rain"></div>
+    <div id="weather"></div>
+    <div class="time-indicator" id="timeIndicator"></div>
 
     <div class="container">
         <div class="header">
@@ -432,7 +489,92 @@
 
     <script>
         const DISCORD_ID = '1353737272989581436';
-        let rainDirection = 0; // 0 = straight down, positive = right, negative = left
+        let weatherDirection = 0;
+        let currentWeatherType = '';
+        let weatherInterval;
+
+        // Weather types and their properties
+        const weatherTypes = {
+            rain: {
+                create: createRaindrop,
+                types: ['raindrop'],
+                interval: 50,
+                directionRange: [-15, -10, -5, 0, 5, 10, 15]
+            },
+            leaves: {
+                create: createLeaf,
+                types: ['🍂', '🍁', '🥮', '🌰'],
+                interval: 200,
+                directionRange: [-20, -15, -10, -5, 0, 5, 10, 15, 20],
+                colors: ['#ff6b35', '#ff8e53', '#ffaa00', '#e65c00', '#ff4444']
+            },
+            snow: {
+                create: createSnowflake,
+                types: ['❄', '❅', '❆'],
+                interval: 80,
+                directionRange: [-10, -8, -5, -3, 0, 3, 5, 8, 10]
+            }
+        };
+
+        function getPSTTime() {
+            const now = new Date();
+            // Convert to PST (UTC-8) - considering daylight saving time would need more complex logic
+            const pstOffset = -8 * 60; // PST is UTC-8
+            const pstTime = new Date(now.getTime() + (pstOffset - now.getTimezoneOffset()) * 60000);
+            return pstTime;
+        }
+
+function getPDTTime() {
+    const now = new Date();
+    // PDT is UTC-7
+    const pdtOffset = -7 * 60; // PDT is UTC-7
+    const pdtTime = new Date(now.getTime() + (pdtOffset - now.getTimezoneOffset()) * 60000);
+    return pdtTime;
+}
+
+function getTimeOfDay() {
+    const pdtTime = getPDTTime();
+    const hours = pdtTime.getHours();
+    const minutes = pdtTime.getMinutes();
+    
+    // Update time indicator
+    const timeString = pdtTime.toLocaleTimeString('en-US', { 
+        timeZone: 'America/Los_Angeles',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true 
+    });
+    document.getElementById('timeIndicator').textContent = `PDT: ${timeString}`;
+    
+    // Determine time of day
+    if (hours >= 6 && hours < 12) {
+        return 'morning';
+    } else if (hours >= 12 && hours < 18) {
+        return 'afternoon';
+    } else {
+        return 'night';
+    }
+}
+
+        function getWeatherType() {
+            const timeOfDay = getTimeOfDay();
+            
+            // Update background
+            const background = document.getElementById('background');
+            background.className = 'background';
+            background.classList.add(`${timeOfDay}-bg`);
+            
+            switch(timeOfDay) {
+                case 'morning':
+                    return 'rain';
+                case 'afternoon':
+                    return 'leaves';
+                case 'night':
+                    return 'snow';
+                default:
+                    return 'leaves';
+            }
+        }
 
         function createRaindrop() {
             const raindrop = document.createElement('div');
@@ -443,30 +585,101 @@
             raindrop.style.animationDuration = Math.random() * 2 + 1 + 's';
             raindrop.style.opacity = Math.random() * 0.6 + 0.2;
             raindrop.style.height = Math.random() * 10 + 10 + 'px';
+            raindrop.style.transform = `rotate(${weatherDirection}deg)`;
             
-            // Apply current direction
-            raindrop.style.transform = `rotate(${rainDirection}deg)`;
-            
-            document.getElementById('rain').appendChild(raindrop);
+            document.getElementById('weather').appendChild(raindrop);
             
             setTimeout(() => {
-                raindrop.remove();
+                if (raindrop.parentNode) {
+                    raindrop.remove();
+                }
             }, 3000);
         }
 
-        function createRain() {
-            setInterval(createRaindrop, 50);
+        function createLeaf() {
+            const leaf = document.createElement('div');
+            leaf.classList.add('leaf');
+            
+            const leafType = weatherTypes.leaves.types[Math.floor(Math.random() * weatherTypes.leaves.types.length)];
+            leaf.innerHTML = leafType;
+            
+            const startX = Math.random() * 100;
+            leaf.style.left = startX + 'vw';
+            leaf.style.animationDuration = Math.random() * 3 + 2 + 's';
+            leaf.style.opacity = Math.random() * 0.7 + 0.3;
+            leaf.style.fontSize = (Math.random() * 10 + 15) + 'px';
+            
+            const sway = (Math.random() - 0.5) * 10;
+            leaf.style.transform = `rotate(${weatherDirection + sway}deg)`;
+            
+            const randomColor = weatherTypes.leaves.colors[Math.floor(Math.random() * weatherTypes.leaves.colors.length)];
+            leaf.style.color = randomColor;
+            
+            document.getElementById('weather').appendChild(leaf);
+            
+            setTimeout(() => {
+                if (leaf.parentNode) {
+                    leaf.remove();
+                }
+            }, 5000);
         }
 
-        function changeRainDirection() {
-            // Change direction every 15 seconds
-            const directions = [-15, -10, -5, 0, 5, 10, 15];
-            rainDirection = directions[Math.floor(Math.random() * directions.length)];
+        function createSnowflake() {
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
             
-            // Update all existing raindrops
-            const raindrops = document.querySelectorAll('.raindrop');
-            raindrops.forEach(drop => {
-                drop.style.transform = `rotate(${rainDirection}deg)`;
+            const snowType = weatherTypes.snow.types[Math.floor(Math.random() * weatherTypes.snow.types.length)];
+            snowflake.innerHTML = snowType;
+            
+            const startX = Math.random() * 100;
+            snowflake.style.left = startX + 'vw';
+            snowflake.style.animationDuration = Math.random() * 4 + 3 + 's'; // Slower fall for snow
+            snowflake.style.opacity = Math.random() * 0.8 + 0.2;
+            snowflake.style.fontSize = (Math.random() * 8 + 12) + 'px';
+            
+            const sway = (Math.random() - 0.5) * 5; // Less sway for snow
+            snowflake.style.transform = `rotate(${weatherDirection + sway}deg)`;
+            
+            document.getElementById('weather').appendChild(snowflake);
+            
+            setTimeout(() => {
+                if (snowflake.parentNode) {
+                    snowflake.remove();
+                }
+            }, 7000);
+        }
+
+        function createWeather() {
+            const weatherType = getWeatherType();
+            
+            // Clear existing weather and interval if type changed
+            if (weatherType !== currentWeatherType) {
+                clearInterval(weatherInterval);
+                document.getElementById('weather').innerHTML = '';
+                currentWeatherType = weatherType;
+            }
+            
+            // Create new weather element
+            weatherTypes[weatherType].create();
+        }
+
+        function startWeather() {
+            const weatherType = getWeatherType();
+            currentWeatherType = weatherType;
+            weatherInterval = setInterval(createWeather, weatherTypes[weatherType].interval);
+        }
+
+        function changeWeatherDirection() {
+            const weatherType = getWeatherType();
+            const directions = weatherTypes[weatherType].directionRange;
+            weatherDirection = directions[Math.floor(Math.random() * directions.length)];
+            
+            const elements = document.querySelectorAll('#weather > div');
+            elements.forEach(element => {
+                const sway = element.classList.contains('leaf') ? (Math.random() - 0.5) * 10 : 
+                            element.classList.contains('snowflake') ? (Math.random() - 0.5) * 5 : 0;
+                element.style.transition = 'transform 2s ease-in-out';
+                element.style.transform = `rotate(${weatherDirection + sway}deg)`;
             });
         }
 
@@ -605,8 +818,9 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            createRain();
-            setInterval(changeRainDirection, 15000); // Change direction every 15 seconds
+            startWeather();
+            setInterval(changeWeatherDirection, 15000);
+            setInterval(startWeather, 60000); // Check time every minute
             fetchDiscordStatus();
             setInterval(fetchDiscordStatus, 1000);
         });
