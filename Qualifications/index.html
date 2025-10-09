@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qualifications</title>
+    <link rel="icon" type="image/jpeg" href="https://i.imgur.com/h7E54if.jpeg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #000;
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -3;
+            transition: background 2s ease-in-out;
+        }
+
+        .afternoon-bg {
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 165, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 200, 100, 0.05) 0%, transparent 50%);
+        }
+
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.1'/%3E%3C/svg%3E");
+            z-index: -2;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .name {
+            font-size: 4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ff6b35 0%, #ff8e53 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+            text-shadow: 0 0 20px rgba(255, 107, 53, 0.5);
+        }
+
+        .title {
+            font-size: 1.2rem;
+            color: #ff8e53;
+            font-weight: 400;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(255, 142, 83, 0.3);
+        }
+
+        .qualifications-section {
+            background: rgba(255, 107, 53, 0.05);
+            border: 1px solid rgba(255, 107, 53, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 800px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.1);
+            margin-bottom: 3rem;
+        }
+
+        .qualifications-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .qualifications-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 107, 53, 0.3);
+        }
+
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #ff6b35;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-shadow: 0 0 10px rgba(255, 107, 53, 0.5);
+        }
+
+        .live-dot {
+            width: 6px;
+            height: 6px;
+            background: #ff6b35;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 10px #ff6b35;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .qualifications-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .qualification-card {
+            background: rgba(255, 107, 53, 0.03);
+            border: 1px solid rgba(255, 107, 53, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 0 10px rgba(255, 107, 53, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .qualification-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.2);
+            border-color: rgba(255, 107, 53, 0.3);
+        }
+
+        .qualification-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #ff6b35;
+            text-shadow: 0 0 10px rgba(255, 107, 53, 0.5);
+        }
+
+        .qualification-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: #ff8e53;
+            text-shadow: 0 0 5px rgba(255, 142, 83, 0.3);
+        }
+
+        .qualification-details {
+            color: #ffb38a;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .qualification-list {
+            list-style-type: none;
+            margin-top: 0.5rem;
+        }
+
+        .qualification-list li {
+            margin-bottom: 0.5rem;
+            padding-left: 1rem;
+            position: relative;
+        }
+
+        .qualification-list li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #ff6b35;
+            text-shadow: 0 0 5px rgba(255, 107, 53, 0.5);
+        }
+
+        .footer {
+            margin-top: 3rem;
+            text-align: center;
+            color: #ff8e53;
+            font-size: 0.8rem;
+            text-shadow: 0 0 10px rgba(255, 142, 83, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+
+            .name {
+                font-size: 2.5rem;
+            }
+
+            .qualifications-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background afternoon-bg"></div>
+    <div class="noise"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="name">Qualifications</h1>
+            <p class="title">Technical Skills & Experience</p>
+        </div>
+
+        <div class="qualifications-section">
+            <div class="qualifications-header">
+                <div class="qualifications-title">Technical Qualifications</div>
+                <div class="live-indicator">
+                    <div class="live-dot"></div>
+                    ACTIVE
+                </div>
+            </div>
+
+            <div class="qualifications-grid">
+                <div class="qualification-card">
+                    <div class="qualification-icon">📱</div>
+                    <div class="qualification-title">iOS Sideloading</div>
+                    <div class="qualification-details">
+                        Expert in sideloading applications on iOS devices, bypassing restrictions to install custom apps and modifications.
+                    </div>
+                </div>
+
+                <div class="qualification-card">
+                    <div class="qualification-icon">🎮</div>
+                    <div class="qualification-title">Roblox Exploiting</div>
+                    <div class="qualification-details">
+                        Experienced in executing exploits within Roblox platform, understanding game mechanics and security vulnerabilities.
+                    </div>
+                </div>
+
+                <div class="qualification-card">
+                    <div class="qualification-icon">💻</div>
+                    <div class="qualification-title">Lua Scripting</div>
+                    <div class="qualification-details">
+                        Proficient in Lua programming language with practical application in game modification and scripting environments.
+                    </div>
+                </div>
+
+                <div class="qualification-card">
+                    <div class="qualification-icon">🛡️</div>
+                    <div class="qualification-title">Penetration Testing</div>
+                    <div class="qualification-details">
+                        Skilled in security testing methodologies, identifying vulnerabilities in systems and applications.
+                    </div>
+                </div>
+
+                <div class="qualification-card">
+                    <div class="qualification-icon">🔧</div>
+                    <div class="qualification-title">Apple Device Exploits</div>
+                    <div class="qualification-details">
+                        Specialized knowledge in Apple device manipulation, customization, and security research.
+                    </div>
+                </div>
+
+                <div class="qualification-card">
+                    <div class="qualification-icon">👥</div>
+                    <div class="qualification-title">Community Experience</div>
+                    <div class="qualification-details">
+                        <ul class="qualification-list">
+                            <li>2+ years of experience on Discord platform</li>
+                            <li>2+ months as moderator in 3 separate servers</li>
+                            <li>Active technical community engagement</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            © 2024 Qualifications Portfolio. All rights reserved.
+        </div>
+    </div>
+</body>
+</html>
