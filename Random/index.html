@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canofravioli - Half-Life Themed Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style type="text/css">
+        body {cursor: url(http://www.rw-designer.com/cursor-extern.php?id=204308), auto;}
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --hl-orange: #e89c30;
+            --hl-orange-dark: #c87c1c;
+            --hl-orange-light: #f8bc60;
+            --hl-dark: #0a0a12;
+            --hl-darker: #050508;
+            --hl-gray: #2a2a35;
+            --hl-light: #e0e0e0;
+            --hl-blue: #4a7b9d;
+            --hl-green: #4a9c82;
+        }
+
+        body {
+            background-color: var(--hl-dark);
+            color: var(--hl-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(42, 42, 53, 0.3) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(42, 42, 53, 0.3) 0%, transparent 20%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background-color: rgba(10, 10, 18, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 2px solid var(--hl-orange);
+            box-shadow: 0 2px 10px rgba(232, 156, 48, 0.2);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, var(--hl-orange), var(--hl-orange-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: var(--hl-dark);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-icon::after {
+            content: 'λ';
+            position: absolute;
+            font-size: 1.8rem;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            color: var(--hl-orange);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 5px rgba(232, 156, 48, 0.5);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        nav a {
+            color: var(--hl-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        nav a:hover {
+            color: var(--hl-orange);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--hl-orange);
+            transition: width 0.3s;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            background: 
+                linear-gradient(rgba(10, 10, 18, 0.85), rgba(10, 10, 18, 0.9)),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%231a1a2e"/><path d="M0 0L100 100M100 0L0 100" stroke="%23262644" stroke-width="1"/></svg>');
+            background-size: cover;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(232, 156, 48, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(74, 156, 130, 0.1) 0%, transparent 50%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+        }
+
+        .hero h2 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: var(--hl-orange);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(232, 156, 48, 0.5);
+        }
+
+        .hero h2 span {
+            display: block;
+            font-size: 2rem;
+            color: var(--hl-light);
+            margin-top: 10px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: #b0b0b0;
+        }
+
+        .highlight {
+            color: var(--hl-orange);
+            font-weight: 600;
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(to right, var(--hl-orange), var(--hl-orange-dark));
+            color: var(--hl-dark);
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(232, 156, 48, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(232, 156, 48, 0.6);
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: 0.5s;
+        }
+
+        .btn:hover::after {
+            left: 100%;
+        }
+
+        section {
+            padding: 100px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--hl-orange);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: inline-block;
+        }
+
+        .section-title h2::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 3px;
+            background: var(--hl-orange);
+            margin: 15px auto;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .about-text p {
+            margin-bottom: 20px;
+            color: #b0b0b0;
+        }
+
+        .about-image {
+            position: relative;
+        }
+
+        .profile-card {
+            background: rgba(42, 42, 53, 0.6);
+            border-radius: 8px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--hl-orange);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--hl-orange);
+        }
+
+        .profile-card h3 {
+            margin-bottom: 20px;
+            color: var(--hl-orange);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .profile-card ul {
+            list-style: none;
+        }
+
+        .profile-card li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(232, 156, 48, 0.2);
+        }
+
+        .profile-card li:last-child {
+            border-bottom: none;
+        }
+
+        .profile-card i {
+            color: var(--hl-orange);
+            width: 20px;
+            text-align: center;
+        }
+
+        .platforms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .platform-card {
+            background: rgba(42, 42, 53, 0.6);
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid var(--hl-gray);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .platform-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            border-color: var(--hl-orange);
+        }
+
+        .platform-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--hl-orange);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .platform-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .platform-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--hl-orange);
+        }
+
+        .platform-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--hl-orange);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .platform-card p {
+            color: #b0b0b0;
+            margin-bottom: 20px;
+        }
+
+        .platform-link {
+            display: inline-block;
+            color: var(--hl-orange);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .platform-link:hover {
+            color: var(--hl-orange-light);
+        }
+
+        .content-highlights {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .content-item {
+            background: rgba(42, 42, 53, 0.6);
+            border-radius: 8px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid var(--hl-gray);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .content-item:hover {
+            border-color: var(--hl-orange);
+            transform: translateY(-5px);
+        }
+
+        .content-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--hl-orange);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .content-item:hover::before {
+            transform: scaleX(1);
+        }
+
+        .content-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--hl-orange);
+        }
+
+        .content-item h3 {
+            margin-bottom: 10px;
+            color: var(--hl-orange);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .content-item p {
+            color: #b0b0b0;
+        }
+
+        footer {
+            background-color: rgba(10, 10, 18, 0.95);
+            padding: 50px 0 20px;
+            border-top: 2px solid var(--hl-orange);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+
+        .footer-column h3 {
+            color: var(--hl-orange);
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-column p {
+            color: #b0b0b0;
+            margin-bottom: 20px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: var(--hl-orange);
+            border-radius: 4px;
+            color: var(--hl-dark);
+            text-decoration: none;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .social-link:hover {
+            background: var(--hl-orange-light);
+            transform: translateY(-3px);
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(232, 156, 48, 0.2);
+        }
+
+        .footer-column ul li:last-child {
+            border-bottom: none;
+        }
+
+        .footer-column a {
+            color: #b0b0b0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-column a:hover {
+            color: var(--hl-orange);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(232, 156, 48, 0.2);
+            color: #808080;
+            font-size: 0.9rem;
+        }
+
+        .hl-badge {
+            display: inline-block;
+            background: var(--hl-orange);
+            color: var(--hl-dark);
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 5px;
+            text-transform: uppercase;
+        }
+
+        .lambda-symbol {
+            color: var(--hl-orange);
+            font-weight: bold;
+        }
+
+        .cursor-attribution {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.7rem;
+            color: #666;
+            z-index: 1000;
+        }
+
+        .cursor-attribution a {
+            color: #888;
+            text-decoration: none;
+        }
+
+        .cursor-attribution a:hover {
+            color: var(--hl-orange);
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            nav ul {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .hero h2 {
+                font-size: 2.5rem;
+            }
+
+            .hero h2 span {
+                font-size: 1.5rem;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .platforms-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cursor-attribution {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon"></div>
+                    <h1>Canofravioli</h1>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#platforms">Platforms</a></li>
+                        <li><a href="#content">Content</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <h2>Canofravioli <span>The First</span></h2>
+                <p>Welcome to my corner of the internet! I'm a <span class="highlight">content creator</span> sharing gaming experiences and random uploads when my computer allows it. Join me on my journey through the digital world!</p>
+                <p>This site is inspired by the <span class="highlight">Half-Life universe</span> - one of my favorite game series!</p>
+                <a href="#platforms" class="btn">Explore My Platforms</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="container">
+            <div class="section-title">
+                <h2>About Me</h2>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>Hi there! I'm <span class="highlight">Canofraviolithefirst</span> (or just canofravioli, or can) and I'm a YouTuber with a passion for gaming and creating content.</p>
+                    <p>My upload schedule is pretty random since my computer can't always handle recording things, but when I do upload, I put my heart into it!</p>
+                    <p>I hope you enjoy exploring my portfolio and checking out my content across different platforms. Whether you're here from Twitch, YouTube, or Steam, thanks for stopping by!</p>
+                    <p>I'm a big fan of the Half-Life series <span class="lambda-symbol">λ</span>, which inspired the design of this portfolio. The struggle of my PC is my own personal "resonance cascade"!</p>
+                </div>
+                <div class="about-image">
+                    <div class="profile-card">
+                        <h3>Quick Facts</h3>
+                        <ul>
+                            <li><i class="fas fa-user"></i> Known as: Can, Canofravioli, Canofraviolithefirst</li>
+                            <li><i class="fas fa-gamepad"></i> Content: Gaming, Random Uploads</li>
+                            <li><i class="fas fa-laptop"></i> Status: PC struggles but we persist!</li>
+                            <li><i class="fas fa-calendar"></i> Uploads: Random but worth the wait</li>
+                            <li><i class="fas fa-heart"></i> Passion: Creating and sharing experiences</li>
+                            <li><i class="fas fa-rocket"></i> Favorite Game Series: Half-Life <span class="hl-badge">λ</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="platforms">
+        <div class="container">
+            <div class="section-title">
+                <h2>My Platforms</h2>
+            </div>
+            <div class="platforms-grid">
+                <div class="platform-card">
+                    <div class="platform-icon">
+                        <i class="fab fa-twitch"></i>
+                    </div>
+                    <h3>Twitch</h3>
+                    <p>Join me for live streams when my setup cooperates! Gaming, chatting, and good times with the community.</p>
+                    <a href="https://m.twitch.tv/canofravioli1/home" class="platform-link" target="_blank">Visit My Channel →</a>
+                </div>
+                <div class="platform-card">
+                    <div class="platform-icon">
+                        <i class="fab fa-youtube"></i>
+                    </div>
+                    <h3>YouTube</h3>
+                    <p>Check out my uploaded content - from gaming highlights to whatever random things I decide to record!</p>
+                    <a href="https://www.youtube.com/@Canofraviolithefirst" class="platform-link" target="_blank">Visit My Channel →</a>
+                </div>
+                <div class="platform-card">
+                    <div class="platform-icon">
+                        <i class="fab fa-steam"></i>
+                    </div>
+                    <h3>Steam</h3>
+                    <p>See what games I'm playing, my achievements, and connect with me on Steam for gaming sessions.</p>
+                    <a href="https://steamcommunity.com/profiles/76561199500401338/" class="platform-link" target="_blank">Visit My Profile →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="content">
+        <div class="container">
+            <div class="section-title">
+                <h2>Content Highlights</h2>
+            </div>
+            <div class="content-highlights">
+                <div class="content-item">
+                    <div class="content-icon">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <h3>Gaming Content</h3>
+                    <p>Various games played and shared with my audience</p>
+                </div>
+                <div class="content-item">
+                    <div class="content-icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <h3>Random Uploads</h3>
+                    <p>Unexpected content when inspiration strikes</p>
+                </div>
+                <div class="content-item">
+                    <div class="content-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Community Interaction</h3>
+                    <p>Engaging with viewers and building connections</p>
+                </div>
+                <div class="content-item">
+                    <div class="content-icon">
+                        <i class="fas fa-laugh"></i>
+                    </div>
+                    <h3>Fun & Entertainment</h3>
+                    <p>Content focused on enjoyment and good vibes</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Canofravioli</h3>
+                    <p>Content creator, gamer, and all-around digital enthusiast. Making the most of what my PC can handle!</p>
+                    <div class="social-links">
+                        <a href="https://m.twitch.tv/canofravioli1/home" class="social-link" target="_blank">
+                            <i class="fab fa-twitch"></i>
+                        </a>
+                        <a href="https://www.youtube.com/@Canofraviolithefirst" class="social-link" target="_blank">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                        <a href="https://steamcommunity.com/profiles/76561199500401338/" class="social-link" target="_blank">
+                            <i class="fab fa-steam"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About Me</a></li>
+                        <li><a href="#platforms">My Platforms</a></li>
+                        <li><a href="#content">Content</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Content Info</h3>
+                    <ul>
+                        <li><a href="#">Gaming Videos</a></li>
+                        <li><a href="#">Live Streams</a></li>
+                        <li><a href="#">Community</a></li>
+                        <li><a href="#">Random Uploads</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Connect</h3>
+                    <ul>
+                        <li><a href="https://m.twitch.tv/canofravioli1/home" target="_blank">Twitch</a></li>
+                        <li><a href="https://www.youtube.com/@Canofraviolithefirst" target="_blank">YouTube</a></li>
+                        <li><a href="https://steamcommunity.com/profiles/76561199500401338/" target="_blank">Steam</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 Canofravioli. All rights reserved. Made By Blankboii | This portfolio is a fan representation</p>
+                <p>Half-Life is a trademark of Valve Corporation. This site is not affiliated with Valve.</p>
+            </div>
+        </div>
+    </footer>
+
+    <div class="cursor-attribution">
+        <a href="http://www.rw-designer.com/cursor-set/half-life" title="Get free cursors for your web.">HALF LIFE Cursors</a>
+    </div>
+
+    <script>
+        document.querySelectorAll('nav a, .btn').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                
+                window.scrollTo({
+                    top: targetElement.offsetTop - 80,
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.backgroundColor = 'rgba(10, 10, 18, 0.98)';
+            } else {
+                header.style.backgroundColor = 'rgba(10, 10, 18, 0.95)';
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const lambdaElements = document.querySelectorAll('.lambda-symbol');
+            lambdaElements.forEach(el => {
+                el.addEventListener('mouseover', function() {
+                    this.style.textShadow = '0 0 10px rgba(232, 156, 48, 0.8)';
+                    this.style.transform = 'scale(1.2)';
+                    this.style.transition = 'all 0.3s';
+                });
+                
+                el.addEventListener('mouseout', function() {
+                    this.style.textShadow = 'none';
+                    this.style.transform = 'scale(1)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
