@@ -566,6 +566,7 @@
         let weatherDirection = 0;
         let currentWeatherType = '';
         let weatherInterval;
+        let lastCheckedTime = '';
 
         // Weather types with SLOWER generation
         const weatherTypes = {
@@ -740,24 +741,38 @@
             }, duration * 1000 + 1000);
         }
 
-        function createWeather() {
-            const weatherType = getWeatherType();
-            
-            // Clear existing weather and interval if type changed
-            if (weatherType !== currentWeatherType) {
-                clearInterval(weatherInterval);
-                document.getElementById('weather').innerHTML = '';
-                currentWeatherType = weatherType;
-            }
-            
-            // Create new weather element
-            weatherTypes[weatherType].create();
+        function unloadWeather() {
+            // Clear existing weather and interval
+            clearInterval(weatherInterval);
+            document.getElementById('weather').innerHTML = '';
+            currentWeatherType = '';
         }
 
-        function startWeather() {
-            const weatherType = getWeatherType();
-            currentWeatherType = weatherType;
-            weatherInterval = setInterval(createWeather, weatherTypes[weatherType].interval);
+        function checkAndUpdateWeather() {
+            const currentTime = getPDTTime().getHours();
+            
+            // Only update if the time has changed significantly (hour changed)
+            if (currentTime !== lastCheckedTime) {
+                lastCheckedTime = currentTime;
+                const newWeatherType = getWeatherType();
+                
+                // If weather type changed or no weather is active
+                if (newWeatherType !== currentWeatherType) {
+                    unloadWeather();
+                    startWeather(newWeatherType);
+                }
+            }
+        }
+
+        function startWeather(weatherType = null) {
+            // If no specific weather type provided, determine based on time
+            const targetWeatherType = weatherType || getWeatherType();
+            currentWeatherType = targetWeatherType;
+            
+            // Start the weather generation
+            weatherInterval = setInterval(() => {
+                weatherTypes[targetWeatherType].create();
+            }, weatherTypes[targetWeatherType].interval);
         }
 
         function changeWeatherDirection() {
@@ -909,9 +924,14 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            startWeather();
+            // Initialize the weather system
+            unloadWeather(); // Clear any existing weather
+            startWeather(); // Start the correct weather based on current time
+            lastCheckedTime = getPDTTime().getHours(); // Set initial time
+            
+            // Set up periodic checks
             setInterval(changeWeatherDirection, 15000);
-            setInterval(startWeather, 60000); // Check time every minute
+            setInterval(checkAndUpdateWeather, 60000); // Check every minute if weather needs to change
             fetchDiscordStatus();
             setInterval(fetchDiscordStatus, 1000);
         });
