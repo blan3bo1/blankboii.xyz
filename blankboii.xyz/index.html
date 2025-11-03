@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blankboii</title>
@@ -345,6 +343,19 @@
             font-size: 0.9rem;
         }
 
+        .guild-tag {
+            display: inline-block;
+            background: rgba(255, 107, 53, 0.2);
+            border: 1px solid rgba(255, 107, 53, 0.4);
+            border-radius: 8px;
+            padding: 0.2rem 0.6rem;
+            font-size: 0.8rem;
+            color: #ff8e53;
+            margin-top: 0.3rem;
+            text-shadow: 0 0 5px rgba(255, 107, 53, 0.3);
+            font-weight: 500;
+        }
+
         .status-indicator {
             display: flex;
             align-items: center;
@@ -396,6 +407,15 @@
             color: #ffb38a;
             font-size: 0.9rem;
             margin-bottom: 0.25rem;
+        }
+
+        .custom-status-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            margin-right: 8px;
+            display: inline-block;
+            vertical-align: middle;
         }
 
         .spotify-progress {
@@ -499,10 +519,10 @@
     </style>
 </head>
 <body>
-    <div class="background" id="background"></div>
+    <div class="background afternoon-bg" id="background"></div>
     <div class="noise"></div>
     <div id="weather"></div>
-    <div class="time-indicator" id="timeIndicator"></div>
+    <div class="time-indicator" id="timeIndicator">PDT: 04:21 PM</div>
 
     <div class="container">
         <div class="header">
@@ -520,19 +540,20 @@
             </div>
 
             <div class="discord-profile">
-                <img id="discord-avatar" src="" alt="Discord Avatar" class="discord-avatar">
+                <img id="discord-avatar" src="https://cdn.discordapp.com/avatars/1353737272989581436/a9f755d85d901b0c64d365a11a0bb387.png?size=256" alt="Discord Avatar" class="discord-avatar">
                 <div class="discord-info">
-                    <div class="discord-username" id="discord-username">Loading...</div>
-                    <div class="discord-discriminator" id="discord-discriminator">#0000</div>
+                    <div class="discord-username" id="discord-username">Blank</div>
+                    <div class="discord-discriminator" id="discord-discriminator">@blankboii</div>
+                    <div class="guild-tag" id="guild-tag">Asri</div>
                     <div class="status-indicator">
-                        <div class="status-dot" id="status-dot"></div>
-                        <span id="status-text">Loading...</span>
+                        <div class="status-dot status-dnd" id="status-dot"></div>
+                        <span id="status-text">Do Not Disturb</span>
                     </div>
                 </div>
             </div>
 
             <div class="activities" id="activities-container">
-                <div class="no-activity">Loading activities...</div>
+                <!-- Activities will be loaded here -->
             </div>
         </div>
 
@@ -563,6 +584,9 @@
 
     <script>
         const DISCORD_ID = '1353737272989581436';
+        // MANUAL GUILD TAG SETTING - Change this to your guild tag
+        const MANUAL_GUILD_TAG = "Asri";
+        
         let weatherDirection = 0;
         let currentWeatherType = '';
         let weatherInterval;
@@ -615,8 +639,6 @@
 
         function getPDTTime() {
             const now = new Date();
-            // Use the browser's built-in timezone support for Los Angeles
-            // This automatically handles PDT/PST
             return new Date(now.toLocaleString("en-US", { timeZone: "America/Los_Angeles" }));
         }
 
@@ -624,7 +646,6 @@
             const pdtTime = getPDTTime();
             const hours = pdtTime.getHours();
             
-            // Update time indicator with proper formatting
             const timeString = pdtTime.toLocaleTimeString('en-US', { 
                 hour: '2-digit', 
                 minute: '2-digit',
@@ -632,7 +653,6 @@
             });
             document.getElementById('timeIndicator').textContent = `PDT: ${timeString}`;
             
-            // Determine time of day
             if (hours >= 6 && hours < 12) {
                 return 'morning';
             } else if (hours >= 12 && hours < 18) {
@@ -645,7 +665,6 @@
         function getWeatherType() {
             const timeOfDay = getTimeOfDay();
             
-            // Update background
             const background = document.getElementById('background');
             background.className = 'background';
             background.classList.add(`${timeOfDay}-bg`);
@@ -742,7 +761,6 @@
         }
 
         function unloadWeather() {
-            // Clear existing weather and interval
             clearInterval(weatherInterval);
             document.getElementById('weather').innerHTML = '';
             currentWeatherType = '';
@@ -751,12 +769,10 @@
         function checkAndUpdateWeather() {
             const currentTime = getPDTTime().getHours();
             
-            // Only update if the time has changed significantly (hour changed)
             if (currentTime !== lastCheckedTime) {
                 lastCheckedTime = currentTime;
                 const newWeatherType = getWeatherType();
                 
-                // If weather type changed or no weather is active
                 if (newWeatherType !== currentWeatherType) {
                     unloadWeather();
                     startWeather(newWeatherType);
@@ -765,11 +781,9 @@
         }
 
         function startWeather(weatherType = null) {
-            // If no specific weather type provided, determine based on time
             const targetWeatherType = weatherType || getWeatherType();
             currentWeatherType = targetWeatherType;
             
-            // Start the weather generation
             weatherInterval = setInterval(() => {
                 weatherTypes[targetWeatherType].create();
             }, weatherTypes[targetWeatherType].interval);
@@ -851,6 +865,9 @@
             document.getElementById('discord-discriminator').textContent = 
                 `@${user.discord_user.username}`;
 
+            // Set manual guild tag
+            document.getElementById('guild-tag').textContent = MANUAL_GUILD_TAG;
+
             const statusDot = document.getElementById('status-dot');
             const statusText = document.getElementById('status-text');
             
@@ -889,11 +906,32 @@
             activities.forEach(activity => {
                 const activityType = getActivityType(activity.type);
                 
-                let activityContent = `
-                    <div class="activity-name">${activity.name}</div>
-                    ${activity.details ? `<div class="activity-details">${activity.details}</div>` : ''}
-                    ${activity.state ? `<div class="activity-details">${activity.state}</div>` : ''}
-                `;
+                let activityContent = '';
+                
+                // Handle custom status with emoji
+                if (activity.type === 4) {
+                    let statusText = activity.state || '';
+                    
+                    if (activity.emoji) {
+                        if (activity.emoji.id) {
+                            const emojiUrl = `https://cdn.discordapp.com/emojis/${activity.emoji.id}.${activity.emoji.animated ? 'gif' : 'png'}?size=40`;
+                            statusText = `<img src="${emojiUrl}" alt="${activity.emoji.name}" class="custom-status-icon">${statusText}`;
+                        } else {
+                            statusText = `<span class="custom-status-icon" style="font-size: 20px; width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center;">${activity.emoji.name}</span>${statusText}`;
+                        }
+                    }
+                    
+                    activityContent = `
+                        <div class="activity-name">Custom Status</div>
+                        <div class="activity-details">${statusText}</div>
+                    `;
+                } else {
+                    activityContent = `
+                        <div class="activity-name">${activity.name}</div>
+                        ${activity.details ? `<div class="activity-details">${activity.details}</div>` : ''}
+                        ${activity.state ? `<div class="activity-details">${activity.state}</div>` : ''}
+                    `;
+                }
 
                 if (activity.type === 2 && activity.timestamps) {
                     const progress = calculateSpotifyProgress(activity);
@@ -924,14 +962,12 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize the weather system
-            unloadWeather(); // Clear any existing weather
-            startWeather(); // Start the correct weather based on current time
-            lastCheckedTime = getPDTTime().getHours(); // Set initial time
+            unloadWeather();
+            startWeather();
+            lastCheckedTime = getPDTTime().getHours();
             
-            // Set up periodic checks
             setInterval(changeWeatherDirection, 15000);
-            setInterval(checkAndUpdateWeather, 60000); // Check every minute if weather needs to change
+            setInterval(checkAndUpdateWeather, 60000);
             fetchDiscordStatus();
             setInterval(fetchDiscordStatus, 1000);
         });
