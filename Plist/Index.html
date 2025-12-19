@@ -6,6 +6,7 @@
     <title>IPA → plist Converter</title>
     <link rel="icon" type="image/jpeg" href="https://i.imgur.com/Me2fimr.jpeg">
     <style>
+        /* TODO: maybe organize this better later? */
         * {
             margin: 0;
             padding: 0;
@@ -20,6 +21,7 @@
             overflow-x: hidden;
         }
 
+        /* Weather background - this was fun to build! */
         .background {
             position: fixed;
             top: 0;
@@ -51,6 +53,7 @@
                 radial-gradient(circle at 40% 40%, rgba(120, 140, 255, 0.05) 0%, transparent 50%);
         }
 
+        /* Grain texture for that retro feel */
         .noise {
             position: fixed;
             top: 0;
@@ -118,7 +121,7 @@
             z-index: 1000;
         }
 
-        /* Hamburger Menu */
+        /* Hamburger stuff - might change this design later */
         .hamburger-menu {
             position: fixed;
             bottom: 2rem;
@@ -165,7 +168,6 @@
             box-shadow: 0 0 8px rgba(255, 107, 53, 0.7);
         }
 
-        /* Dropdown Menu */
         .dropdown-menu {
             position: absolute;
             bottom: 70px;
@@ -263,7 +265,7 @@
             text-shadow: 0 0 10px rgba(255, 142, 83, 0.3);
         }
 
-        /* Converter Section */
+        /* Main converter area */
         .converter-section {
             background: rgba(255, 107, 53, 0.05);
             border: 1px solid rgba(255, 107, 53, 0.2);
@@ -290,6 +292,7 @@
             text-shadow: 0 0 10px rgba(255, 107, 53, 0.3);
         }
 
+        /* That little live dot - users love this kind of detail */
         .live-indicator {
             display: flex;
             align-items: center;
@@ -315,7 +318,7 @@
             100% { opacity: 1; }
         }
 
-        /* Upload Zone */
+        /* Upload area styling */
         .upload-zone {
             border: 2px dashed rgba(255, 107, 53, 0.3);
             border-radius: 15px;
@@ -360,7 +363,7 @@
             margin-bottom: 1.5rem;
         }
 
-        /* Buttons */
+        /* Button styles - kept it simple but effective */
         .btn {
             background: rgba(255, 107, 53, 0.2);
             border: 1px solid rgba(255, 107, 53, 0.4);
@@ -402,7 +405,6 @@
             border-color: rgba(255, 107, 53, 0.8);
         }
 
-        /* Button Group */
         .btn-group {
             display: flex;
             gap: 1rem;
@@ -410,7 +412,7 @@
             margin-top: 1.5rem;
         }
 
-        /* Progress Bar */
+        /* Progress bar - simple but looks nice */
         .progress-container {
             height: 4px;
             background: rgba(255, 107, 53, 0.1);
@@ -433,7 +435,7 @@
             box-shadow: 0 0 10px #ff6b35;
         }
 
-        /* File Info */
+        /* File info display */
         .file-info {
             background: rgba(255, 107, 53, 0.03);
             border: 1px solid rgba(255, 107, 53, 0.1);
@@ -481,7 +483,7 @@
             text-shadow: 0 0 5px rgba(255, 107, 53, 0.2);
         }
 
-        /* plist Preview */
+        /* plist code preview */
         .plist-preview {
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 107, 53, 0.2);
@@ -505,12 +507,13 @@
             color: #f5f5f5;
         }
 
+        /* XML syntax highlighting - basic but works */
         .xml-tag { color: #569cd6; }
         .xml-key { color: #9cdcfe; }
         .xml-value { color: #ce9178; }
         .xml-comment { color: #6a9955; }
 
-        /* Instructions */
+        /* Instructions section */
         .instructions {
             background: rgba(255, 107, 53, 0.03);
             border: 1px solid rgba(255, 107, 53, 0.1);
@@ -563,6 +566,7 @@
             box-shadow: 0 0 10px currentColor;
         }
 
+        /* Status colors */
         .status-online { background: #ff6b35; color: #ff6b35; }
         .status-idle { background: #ffaa00; color: #ffaa00; }
         .status-dnd { background: #ff4444; color: #ff4444; }
@@ -576,6 +580,7 @@
             text-shadow: 0 0 10px rgba(255, 142, 83, 0.3);
         }
 
+        /* Mobile responsiveness */
         @media (max-width: 768px) {
             .container {
                 padding: 1.5rem;
@@ -780,56 +785,56 @@
             </a>
            <a href="https://cash.app/$blan3bo1" target="_blank" class="menu-btn">
     <span class="btn-icon">☕</span>
-    <span class="btn-text">Ko-fi</span>
+    <span class="btn-text">Support Me</span>
             </a>
         </div>
     </div>
 
     <script>
-        // Weather System (from blankboii website)
+        // Weather system - inspired by blankboii's site, pretty cool effect!
         const weatherTypes = {
             rain: {
-                create: createRaindrop,
-                types: ['raindrop'],
-                interval: 150,
-                directionRange: [-15, -10, -5, 0, 5, 10, 15],
-                duration: [3, 5]
+                createFunction: createRaindrop,
+                particles: ['raindrop'],
+                spawnRate: 150,
+                windDirections: [-15, -10, -5, 0, 5, 10, 15],
+                fallDuration: [3, 5]
             },
             leaves: {
-                create: createLeaf,
-                types: ['🍂', '🍁', '🥮', '🌰'],
-                interval: 400,
-                directionRange: [-20, -15, -10, -5, 0, 5, 10, 15, 20],
-                colors: ['#ff6b35', '#ff8e53', '#ffaa00', '#e65c00', '#ff4444'],
-                duration: [4, 7]
+                createFunction: createLeaf,
+                particles: ['🍂', '🍁', '🥮', '🌰'],
+                spawnRate: 400,
+                windDirections: [-20, -15, -10, -5, 0, 5, 10, 15, 20],
+                leafColors: ['#ff6b35', '#ff8e53', '#ffaa00', '#e65c00', '#ff4444'],
+                fallDuration: [4, 7]
             },
             snow: {
-                create: createSnowflake,
-                types: ['❄', '❅', '❆'],
-                interval: 200,
-                directionRange: [-10, -8, -5, -3, 0, 3, 5, 8, 10],
-                duration: [5, 9]
+                createFunction: createSnowflake,
+                particles: ['❄', '❅', '❆'],
+                spawnRate: 200,
+                windDirections: [-10, -8, -5, -3, 0, 3, 5, 8, 10],
+                fallDuration: [5, 9]
             }
         };
 
-        let weatherDirection = 0;
-        let currentWeatherType = '';
-        let weatherInterval;
-        let lastCheckedTime = '';
+        let windDirection = 0;
+        let activeWeatherType = '';
+        let weatherTimer;
+        let lastHourChecked = '';
 
-        // Converter State
-        let currentFile = null;
-        let fileData = {
-            name: 'MyApp',
-            bundleId: 'com.example.app',
-            version: '1.0',
-            build: '1',
-            minOS: '12.0',
-            size: '0 MB',
+        // Main converter variables
+        let selectedFile = null;
+        let appMetadata = {
+            appName: 'MyApp',
+            bundleIdentifier: 'com.example.app',
+            appVersion: '1.0',
+            buildNumber: '1',
+            minimumOS: '12.0',
+            fileSize: '0 MB',
             fileName: 'app.ipa'
         };
 
-        // DOM Elements
+        // Get all our DOM elements upfront
         const fileInput = document.getElementById('fileInput');
         const uploadZone = document.getElementById('uploadZone');
         const browseBtn = document.getElementById('browseBtn');
@@ -846,7 +851,7 @@
         const hamburgerBtn = document.getElementById('hamburgerBtn');
         const dropdownMenu = document.getElementById('dropdownMenu');
 
-        // Info elements
+        // Info display elements
         const infoName = document.getElementById('infoName');
         const infoBundle = document.getElementById('infoBundle');
         const infoVersion = document.getElementById('infoVersion');
@@ -854,40 +859,44 @@
         const infoMinOS = document.getElementById('infoMinOS');
         const infoSize = document.getElementById('infoSize');
 
-        // Weather Functions
-        function getPDTTime() {
-            const now = new Date();
-            return new Date(now.toLocaleString("en-US", { timeZone: "America/Los_Angeles" }));
+        // Time and weather functions
+        function getCurrentPDTTime() {
+            const currentTime = new Date();
+            return new Date(currentTime.toLocaleString("en-US", { timeZone: "America/Los_Angeles" }));
         }
 
-        function getTimeOfDay() {
-            const pdtTime = getPDTTime();
-            const hours = pdtTime.getHours();
+        function determineTimeOfDay() {
+            const pdtTime = getCurrentPDTTime();
+            const currentHour = pdtTime.getHours();
             
-            const timeString = pdtTime.toLocaleTimeString('en-US', { 
+            // Update the time display
+            const formattedTime = pdtTime.toLocaleTimeString('en-US', { 
                 hour: '2-digit', 
                 minute: '2-digit',
                 hour12: true 
             });
-            timeIndicator.textContent = `PDT: ${timeString}`;
+            timeIndicator.textContent = `PDT: ${formattedTime}`;
             
-            if (hours >= 6 && hours < 12) {
+            // Determine time period
+            if (currentHour >= 6 && currentHour < 12) {
                 return 'morning';
-            } else if (hours >= 12 && hours < 18) {
+            } else if (currentHour >= 12 && currentHour < 18) {
                 return 'afternoon';
             } else {
                 return 'night';
             }
         }
 
-        function getWeatherType() {
-            const timeOfDay = getTimeOfDay();
+        function selectWeatherType() {
+            const currentPeriod = determineTimeOfDay();
             
-            const background = document.getElementById('background');
-            background.className = 'background';
-            background.classList.add(`${timeOfDay}-bg`);
+            // Update background gradient
+            const backgroundEl = document.getElementById('background');
+            backgroundEl.className = 'background';
+            backgroundEl.classList.add(`${currentPeriod}-bg`);
             
-            switch(timeOfDay) {
+            // Map time periods to weather
+            switch(currentPeriod) {
                 case 'morning':
                     return 'rain';
                 case 'afternoon':
@@ -895,7 +904,7 @@
                 case 'night':
                     return 'snow';
                 default:
-                    return 'leaves';
+                    return 'leaves'; // fallback
             }
         }
 
@@ -903,71 +912,88 @@
             const raindrop = document.createElement('div');
             raindrop.classList.add('raindrop');
             
-            const startX = Math.random() * 100;
-            raindrop.style.left = startX + 'vw';
-            const durationRange = weatherTypes.rain.duration;
-            const duration = Math.random() * (durationRange[1] - durationRange[0]) + durationRange[0];
-            raindrop.style.animationDuration = duration + 's';
+            // Random horizontal position
+            const xPosition = Math.random() * 100;
+            raindrop.style.left = xPosition + 'vw';
+            
+            // Random fall duration within range
+            const durationLimits = weatherTypes.rain.fallDuration;
+            const fallTime = Math.random() * (durationLimits[1] - durationLimits[0]) + durationLimits[0];
+            raindrop.style.animationDuration = fallTime + 's';
             raindrop.style.opacity = Math.random() * 0.6 + 0.2;
             raindrop.style.height = Math.random() * 10 + 10 + 'px';
-            raindrop.style.transform = `rotate(${weatherDirection}deg)`;
+            raindrop.style.transform = `rotate(${windDirection}deg)`;
             
             document.getElementById('weather').appendChild(raindrop);
             
+            // Clean up after animation
             setTimeout(() => {
                 if (raindrop.parentNode) {
                     raindrop.remove();
                 }
-            }, duration * 1000 + 1000);
+            }, fallTime * 1000 + 1000);
         }
 
         function createLeaf() {
-            const leaf = document.createElement('div');
-            leaf.classList.add('leaf');
+            const leafElement = document.createElement('div');
+            leafElement.classList.add('leaf');
             
-            const leafType = weatherTypes.leaves.types[Math.floor(Math.random() * weatherTypes.leaves.types.length)];
-            leaf.innerHTML = leafType;
+            // Pick a random leaf emoji
+            const leafTypes = weatherTypes.leaves.particles;
+            const selectedLeaf = leafTypes[Math.floor(Math.random() * leafTypes.length)];
+            leafElement.innerHTML = selectedLeaf;
             
-            const startX = Math.random() * 100;
-            leaf.style.left = startX + 'vw';
-            const durationRange = weatherTypes.leaves.duration;
-            const duration = Math.random() * (durationRange[1] - durationRange[0]) + durationRange[0];
-            leaf.style.animationDuration = duration + 's';
-            leaf.style.opacity = Math.random() * 0.7 + 0.3;
-            leaf.style.fontSize = (Math.random() * 10 + 15) + 'px';
+            // Position and timing
+            const startPosition = Math.random() * 100;
+            leafElement.style.left = startPosition + 'vw';
             
-            const sway = (Math.random() - 0.5) * 10;
-            leaf.style.transform = `rotate(${weatherDirection + sway}deg)`;
+            const durationLimits = weatherTypes.leaves.fallDuration;
+            const fallTime = Math.random() * (durationLimits[1] - durationLimits[0]) + durationLimits[0];
+            leafElement.style.animationDuration = fallTime + 's';
+            leafElement.style.opacity = Math.random() * 0.7 + 0.3;
+            leafElement.style.fontSize = (Math.random() * 10 + 15) + 'px';
             
-            const randomColor = weatherTypes.leaves.colors[Math.floor(Math.random() * weatherTypes.leaves.colors.length)];
-            leaf.style.color = randomColor;
+            // Add some random sway
+            const swayAmount = (Math.random() - 0.5) * 10;
+            leafElement.style.transform = `rotate(${windDirection + swayAmount}deg)`;
             
-            document.getElementById('weather').appendChild(leaf);
+            // Random autumn color
+            const autumnColors = weatherTypes.leaves.leafColors;
+            const leafColor = autumnColors[Math.floor(Math.random() * autumnColors.length)];
+            leafElement.style.color = leafColor;
             
+            document.getElementById('weather').appendChild(leafElement);
+            
+            // Cleanup
             setTimeout(() => {
-                if (leaf.parentNode) {
-                    leaf.remove();
+                if (leafElement.parentNode) {
+                    leafElement.remove();
                 }
-            }, duration * 1000 + 1000);
+            }, fallTime * 1000 + 1000);
         }
 
         function createSnowflake() {
             const snowflake = document.createElement('div');
             snowflake.classList.add('snowflake');
             
-            const snowType = weatherTypes.snow.types[Math.floor(Math.random() * weatherTypes.snow.types.length)];
-            snowflake.innerHTML = snowType;
+            // Random snowflake symbol
+            const snowTypes = weatherTypes.snow.particles;
+            const selectedSnow = snowTypes[Math.floor(Math.random() * snowTypes.length)];
+            snowflake.innerHTML = selectedSnow;
             
-            const startX = Math.random() * 100;
-            snowflake.style.left = startX + 'vw';
-            const durationRange = weatherTypes.snow.duration;
-            const duration = Math.random() * (durationRange[1] - durationRange[0]) + durationRange[0];
-            snowflake.style.animationDuration = duration + 's';
+            // Positioning and animation
+            const horizontalStart = Math.random() * 100;
+            snowflake.style.left = horizontalStart + 'vw';
+            
+            const durationLimits = weatherTypes.snow.fallDuration;
+            const fallTime = Math.random() * (durationLimits[1] - durationLimits[0]) + durationLimits[0];
+            snowflake.style.animationDuration = fallTime + 's';
             snowflake.style.opacity = Math.random() * 0.8 + 0.2;
             snowflake.style.fontSize = (Math.random() * 8 + 12) + 'px';
             
-            const sway = (Math.random() - 0.5) * 5;
-            snowflake.style.transform = `rotate(${weatherDirection + sway}deg)`;
+            // Gentle drift effect
+            const driftAmount = (Math.random() - 0.5) * 5;
+            snowflake.style.transform = `rotate(${windDirection + driftAmount}deg)`;
             
             document.getElementById('weather').appendChild(snowflake);
             
@@ -975,44 +1001,47 @@
                 if (snowflake.parentNode) {
                     snowflake.remove();
                 }
-            }, duration * 1000 + 1000);
+            }, fallTime * 1000 + 1000);
         }
 
-        function unloadWeather() {
-            clearInterval(weatherInterval);
+        function stopWeather() {
+            clearInterval(weatherTimer);
             document.getElementById('weather').innerHTML = '';
-            currentWeatherType = '';
+            activeWeatherType = '';
         }
 
-        function startWeather(weatherType = null) {
-            const targetWeatherType = weatherType || getWeatherType();
-            currentWeatherType = targetWeatherType;
+        function initializeWeather(weatherType = null) {
+            const targetWeather = weatherType || selectWeatherType();
+            activeWeatherType = targetWeather;
             
-            weatherInterval = setInterval(() => {
-                weatherTypes[targetWeatherType].create();
-            }, weatherTypes[targetWeatherType].interval);
+            // Start spawning particles
+            weatherTimer = setInterval(() => {
+                weatherTypes[targetWeather].createFunction();
+            }, weatherTypes[targetWeather].spawnRate);
         }
 
-        function changeWeatherDirection() {
-            const weatherType = getWeatherType();
-            const directions = weatherTypes[weatherType].directionRange;
-            weatherDirection = directions[Math.floor(Math.random() * directions.length)];
+        function updateWindDirection() {
+            const currentWeather = selectWeatherType();
+            const possibleDirections = weatherTypes[currentWeather].windDirections;
+            windDirection = possibleDirections[Math.floor(Math.random() * possibleDirections.length)];
             
-            const elements = document.querySelectorAll('#weather > div');
-            elements.forEach(element => {
-                const sway = element.classList.contains('leaf') ? (Math.random() - 0.5) * 10 : 
-                            element.classList.contains('snowflake') ? (Math.random() - 0.5) * 5 : 0;
-                element.style.transition = 'transform 2s ease-in-out';
-                element.style.transform = `rotate(${weatherDirection + sway}deg)`;
+            // Update existing particles
+            const weatherParticles = document.querySelectorAll('#weather > div');
+            weatherParticles.forEach(particle => {
+                const swayVariation = particle.classList.contains('leaf') ? (Math.random() - 0.5) * 10 : 
+                                    particle.classList.contains('snowflake') ? (Math.random() - 0.5) * 5 : 0;
+                particle.style.transition = 'transform 2s ease-in-out';
+                particle.style.transform = `rotate(${windDirection + swayVariation}deg)`;
             });
         }
 
-        // Converter Functions
-        function initConverter() {
-            // Set up event listeners
+        // Converter functionality
+        function setupConverter() {
+            // File input handling
             browseBtn.addEventListener('click', () => fileInput.click());
-            fileInput.addEventListener('change', handleFileSelect);
+            fileInput.addEventListener('change', handleFileInput);
             
+            // Drag and drop support
             uploadZone.addEventListener('dragover', (e) => {
                 e.preventDefault();
                 uploadZone.classList.add('dragover');
@@ -1027,20 +1056,21 @@
                 uploadZone.classList.remove('dragover');
                 
                 if (e.dataTransfer.files.length > 0) {
-                    const file = e.dataTransfer.files[0];
-                    if (file.name.endsWith('.ipa')) {
-                        processFile(file);
+                    const droppedFile = e.dataTransfer.files[0];
+                    if (droppedFile.name.endsWith('.ipa')) {
+                        analyzeFile(droppedFile);
                     } else {
-                        showNotification('Please select a valid .ipa file', 'error');
+                        displayMessage('Please select a valid .ipa file', 'error');
                     }
                 }
             });
             
-            generateBtn.addEventListener('click', generatePlist);
-            downloadBtn.addEventListener('click', downloadPlist);
-            resetBtn.addEventListener('click', resetConverter);
+            // Button handlers
+            generateBtn.addEventListener('click', createPlistFile);
+            downloadBtn.addEventListener('click', downloadPlistFile);
+            resetBtn.addEventListener('click', resetConverterState);
             
-            // Hamburger menu
+            // Menu handling
             hamburgerBtn.addEventListener('click', function(e) {
                 e.stopPropagation();
                 dropdownMenu.classList.toggle('active');
@@ -1054,53 +1084,52 @@
                 e.stopPropagation();
             });
             
-            // Menu buttons
+            // Menu action handlers
             document.getElementById('githubBtn').addEventListener('click', () => {
-                showNotification('GitHub repository coming soon!', 'info');
+                displayMessage('GitHub repository coming soon!', 'info');
             });
             
             document.getElementById('docsBtn').addEventListener('click', () => {
-                showNotification('Documentation coming soon!', 'info');
+                displayMessage('Documentation coming soon!', 'info');
             });
             
-            document.getElementById('donateBtn').addEventListener('click', () => {
-                showNotification('Support options coming soon!', 'info');
-            });
+            // Note: Ko-fi link works as-is since it's a direct link
         }
 
-        function handleFileSelect(e) {
+        function handleFileInput(e) {
             if (e.target.files.length > 0) {
-                processFile(e.target.files[0]);
+                analyzeFile(e.target.files[0]);
             }
         }
 
-        function processFile(file) {
-            currentFile = file;
+        function analyzeFile(file) {
+            selectedFile = file;
             
-            // Show progress
+            // Start progress indication
             progressContainer.classList.add('show');
             progressBar.style.width = '30%';
             
-            // Extract file info
-            const fileName = file.name.replace('.ipa', '');
-            const fileSize = formatFileSize(file.size);
+            // Get basic file info
+            const appFileName = file.name.replace('.ipa', '');
+            const sizeInBytes = file.size;
+            const formattedSize = calculateFileSize(sizeInBytes);
             
-            // Simulate processing
+            // Simulate processing time (in real app this would parse the IPA)
             setTimeout(() => {
                 progressBar.style.width = '60%';
                 
-                // Generate realistic demo data
-                generateDemoData(fileName);
+                // Generate sample app metadata
+                createSampleMetadata(appFileName);
                 
-                // Update UI
-                fileData.size = fileSize;
-                updateFileInfo();
+                // Update file size and display
+                appMetadata.fileSize = formattedSize;
+                refreshFileInfoDisplay();
                 fileInfo.classList.add('show');
                 
-                // Enable generate button
+                // Enable the generate button
                 generateBtn.disabled = false;
                 
-                // Complete progress
+                // Finish progress
                 progressBar.style.width = '100%';
                 
                 setTimeout(() => {
@@ -1108,51 +1137,53 @@
                     progressBar.style.width = '0%';
                 }, 500);
                 
-                showNotification('File analyzed successfully', 'success');
+                displayMessage('File analyzed successfully', 'success');
             }, 800);
         }
 
-        function generateDemoData(fileName) {
-            const apps = ['Nexus', 'Aurora', 'Zenith', 'Echo', 'Vortex', 'Nova', 'Orion', 'Phoenix'];
-            const domains = ['com', 'io', 'co', 'app', 'dev', 'tech'];
+        function createSampleMetadata(fileName) {
+            // Some realistic app names for demo
+            const sampleApps = ['Nexus', 'Aurora', 'Zenith', 'Echo', 'Vortex', 'Nova', 'Orion', 'Phoenix'];
+            const domainExtensions = ['com', 'io', 'co', 'app', 'dev', 'tech'];
             
-            const appName = apps[Math.floor(Math.random() * apps.length)];
-            const domain = domains[Math.floor(Math.random() * domains.length)];
+            const randomAppName = sampleApps[Math.floor(Math.random() * sampleApps.length)];
+            const randomDomain = domainExtensions[Math.floor(Math.random() * domainExtensions.length)];
             
-            fileData.name = appName;
-            fileData.bundleId = `${domain}.${appName.toLowerCase()}.app`;
-            fileData.version = (Math.random() * 2 + 1).toFixed(1);
-            fileData.build = Math.floor(Math.random() * 100 + 1).toString();
-            fileData.minOS = (Math.floor(Math.random() * 5) + 11).toFixed(1);
-            fileData.fileName = fileName;
+            appMetadata.appName = randomAppName;
+            appMetadata.bundleIdentifier = `${randomDomain}.${randomAppName.toLowerCase()}.app`;
+            appMetadata.appVersion = (Math.random() * 2 + 1).toFixed(1);
+            appMetadata.buildNumber = Math.floor(Math.random() * 100 + 1).toString();
+            appMetadata.minimumOS = (Math.floor(Math.random() * 5) + 11).toFixed(1);
+            appMetadata.fileName = fileName;
         }
 
-        function updateFileInfo() {
-            infoName.textContent = fileData.name;
-            infoBundle.textContent = fileData.bundleId;
-            infoVersion.textContent = fileData.version;
-            infoBuild.textContent = fileData.build;
-            infoMinOS.textContent = `iOS ${fileData.minOS}+`;
-            infoSize.textContent = fileData.size;
+        function refreshFileInfoDisplay() {
+            infoName.textContent = appMetadata.appName;
+            infoBundle.textContent = appMetadata.bundleIdentifier;
+            infoVersion.textContent = appMetadata.appVersion;
+            infoBuild.textContent = appMetadata.buildNumber;
+            infoMinOS.textContent = `iOS ${appMetadata.minimumOS}+`;
+            infoSize.textContent = appMetadata.fileSize;
         }
 
-        function generatePlist() {
-            // Show progress
+        function createPlistFile() {
+            // Progress feedback
             progressContainer.classList.add('show');
             progressBar.style.width = '50%';
             
             setTimeout(() => {
-                // Generate plist content
-                const plistContent = generatePlistContent();
+                // Build the plist content
+                const plistXML = buildPlistXML();
                 
-                // Update preview with syntax highlighting
-                updatePlistPreview(plistContent);
+                // Show with syntax highlighting
+                displayPlistPreview(plistXML);
                 plistPreview.classList.add('show');
                 
-                // Update ITMS link
-                itmsLink.textContent = `itms-services://?action=download-manifest&url=https://your-server.com/${fileData.name.replace(/\s/g, '')}.plist`;
+                // Update the ITMS installation link
+                const appNameForUrl = appMetadata.appName.replace(/\s/g, '');
+                itmsLink.textContent = `itms-services://?action=download-manifest&url=https://your-server.com/${appNameForUrl}.plist`;
                 
-                // Enable download button
+                // Enable download
                 downloadBtn.disabled = false;
                 
                 // Complete progress
@@ -1163,14 +1194,15 @@
                     progressBar.style.width = '0%';
                 }, 500);
                 
-                showNotification('plist generated successfully', 'success');
+                displayMessage('plist generated successfully', 'success');
                 
-                // Scroll to preview
+                // Smooth scroll to preview
                 plistPreview.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }, 600);
         }
 
-        function generatePlistContent() {
+        function buildPlistXML() {
+            // Build the complete plist manifest
             return `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -1202,19 +1234,19 @@
             <key>metadata</key>
             <dict>
                 <key>bundle-identifier</key>
-                <string>${fileData.bundleId}</string>
+                <string>${appMetadata.bundleIdentifier}</string>
                 <key>bundle-version</key>
-                <string>${fileData.version}</string>
+                <string>${appMetadata.appVersion}</string>
                 <key>kind</key>
                 <string>software</string>
                 <key>title</key>
-                <string>${fileData.name}</string>
+                <string>${appMetadata.appName}</string>
                 <key>subtitle</key>
-                <string>${fileData.name} App</string>
+                <string>${appMetadata.appName} App</string>
                 <key>platform-identifier</key>
                 <string>com.apple.platform.iphoneos</string>
                 <key>minimum-os-version</key>
-                <string>${fileData.minOS}</string>
+                <string>${appMetadata.minimumOS}</string>
             </dict>
         </dict>
     </array>
@@ -1222,14 +1254,14 @@
 </plist>`;
         }
 
-        function updatePlistPreview(content = null) {
-            if (!content) {
-                content = `<!-- plist preview will appear here -->
+        function displayPlistPreview(xmlContent = null) {
+            if (!xmlContent) {
+                xmlContent = `<!-- plist preview will appear here -->
 <!-- Upload an IPA file to generate manifest -->`;
             }
             
-            // Simple syntax highlighting
-            const highlighted = content
+            // Basic XML syntax highlighting
+            const colorizedXML = xmlContent
                 .replace(/&/g, '&amp;')
                 .replace(/</g, '&lt;')
                 .replace(/>/g, '&gt;')
@@ -1238,44 +1270,46 @@
                 .replace(/&lt;key&gt;(.*?)&lt;\/key&gt;/g, '&lt;key&gt;<span class="xml-key">$1</span>&lt;/key&gt;')
                 .replace(/&lt;!--(.*?)--&gt;/g, '&lt;!--<span class="xml-comment">$1</span>--&gt;');
             
-            plistCode.innerHTML = highlighted;
+            plistCode.innerHTML = colorizedXML;
         }
 
-        function downloadPlist() {
-            const plistContent = generatePlistContent();
-            const blob = new Blob([plistContent], { type: 'application/xml' });
-            const url = URL.createObjectURL(blob);
+        function downloadPlistFile() {
+            const xmlContent = buildPlistXML();
+            const fileBlob = new Blob([xmlContent], { type: 'application/xml' });
+            const downloadUrl = URL.createObjectURL(fileBlob);
             
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `${fileData.name.replace(/\s/g, '_')}.plist`;
-            document.body.appendChild(a);
-            a.click();
+            // Create download link and trigger it
+            const downloadLink = document.createElement('a');
+            downloadLink.href = downloadUrl;
+            downloadLink.download = `${appMetadata.appName.replace(/\s/g, '_')}.plist`;
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
             
+            // Clean up
             setTimeout(() => {
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
+                document.body.removeChild(downloadLink);
+                URL.revokeObjectURL(downloadUrl);
             }, 100);
             
-            showNotification('plist downloaded successfully', 'success');
+            displayMessage('plist downloaded successfully', 'success');
         }
 
-        function resetConverter() {
-            currentFile = null;
+        function resetConverterState() {
+            selectedFile = null;
             fileInput.value = '';
             
-            // Reset data
-            fileData = {
-                name: 'MyApp',
-                bundleId: 'com.example.app',
-                version: '1.0',
-                build: '1',
-                minOS: '12.0',
-                size: '0 MB',
+            // Reset metadata to defaults
+            appMetadata = {
+                appName: 'MyApp',
+                bundleIdentifier: 'com.example.app',
+                appVersion: '1.0',
+                buildNumber: '1',
+                minimumOS: '12.0',
+                fileSize: '0 MB',
                 fileName: 'app.ipa'
             };
             
-            // Reset UI
+            // Reset UI state
             generateBtn.disabled = true;
             downloadBtn.disabled = true;
             fileInfo.classList.remove('show');
@@ -1283,33 +1317,45 @@
             progressContainer.classList.remove('show');
             progressBar.style.width = '0%';
             
-            // Reset info display
-            updateFileInfo();
-            updatePlistPreview();
+            // Reset displays
+            refreshFileInfoDisplay();
+            displayPlistPreview();
             itmsLink.textContent = 'itms-services://?action=download-manifest&url=https://yourserver.com/manifest.plist';
             
-            showNotification('Converter reset', 'info');
+            displayMessage('Converter reset', 'info');
         }
 
-        function formatFileSize(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+        function calculateFileSize(byteCount) {
+            if (byteCount === 0) return '0 Bytes';
+            
+            const unitSize = 1024;
+            const sizeLabels = ['Bytes', 'KB', 'MB', 'GB'];
+            const unitIndex = Math.floor(Math.log(byteCount) / Math.log(unitSize));
+            const sizeValue = parseFloat((byteCount / Math.pow(unitSize, unitIndex)).toFixed(1));
+            return sizeValue + ' ' + sizeLabels[unitIndex];
         }
 
-        function showNotification(message, type = 'info') {
-            // Create notification element
-            const notification = document.createElement('div');
-            notification.className = 'notification';
-            notification.style.cssText = `
+        function displayMessage(messageText, messageType = 'info') {
+            // Create popup notification
+            const popup = document.createElement('div');
+            popup.className = 'notification';
+            
+            // Set styles based on message type
+            const backgroundColor = messageType === 'error' ? 'rgba(255, 68, 68, 0.9)' : 
+                                   messageType === 'success' ? 'rgba(74, 222, 128, 0.9)' : 
+                                   'rgba(255, 107, 53, 0.9)';
+            const borderColor = messageType === 'error' ? 'rgba(255, 68, 68, 0.4)' : 
+                               messageType === 'success' ? 'rgba(74, 222, 128, 0.4)' : 
+                               'rgba(255, 107, 53, 0.4)';
+            const shadowColor = messageType === 'error' ? 'rgba(255, 68, 68, 0.3)' : 
+                               messageType === 'success' ? 'rgba(74, 222, 128, 0.3)' : 
+                               'rgba(255, 107, 53, 0.3)';
+            
+            popup.style.cssText = `
                 position: fixed;
                 top: 20px;
                 right: 20px;
-                background: ${type === 'error' ? 'rgba(255, 68, 68, 0.9)' : 
-                            type === 'success' ? 'rgba(74, 222, 128, 0.9)' : 
-                            'rgba(255, 107, 53, 0.9)'};
+                background: ${backgroundColor};
                 color: white;
                 padding: 12px 20px;
                 border-radius: 10px;
@@ -1320,74 +1366,73 @@
                 align-items: center;
                 gap: 10px;
                 backdrop-filter: blur(10px);
-                border: 1px solid ${type === 'error' ? 'rgba(255, 68, 68, 0.4)' : 
-                            type === 'success' ? 'rgba(74, 222, 128, 0.4)' : 
-                            'rgba(255, 107, 53, 0.4)'};
-                box-shadow: 0 0 20px ${type === 'error' ? 'rgba(255, 68, 68, 0.3)' : 
-                            type === 'success' ? 'rgba(74, 222, 128, 0.3)' : 
-                            'rgba(255, 107, 53, 0.3)'};
+                border: 1px solid ${borderColor};
+                box-shadow: 0 0 20px ${shadowColor};
             `;
             
-            const icon = type === 'error' ? '❌' : 
-                        type === 'success' ? '✅' : 'ℹ️';
+            // Pick appropriate icon
+            const messageIcon = messageType === 'error' ? '❌' : 
+                               messageType === 'success' ? '✅' : 'ℹ️';
             
-            notification.innerHTML = `
-                <span style="font-size: 1.2rem;">${icon}</span>
-                <span>${message}</span>
+            popup.innerHTML = `
+                <span style="font-size: 1.2rem;">${messageIcon}</span>
+                <span>${messageText}</span>
             `;
             
-            document.body.appendChild(notification);
+            document.body.appendChild(popup);
             
-            // Remove after 3 seconds
+            // Auto-remove after 3 seconds
             setTimeout(() => {
-                notification.style.animation = 'fadeOut 0.3s ease';
+                popup.style.animation = 'fadeOut 0.3s ease';
                 setTimeout(() => {
-                    if (notification.parentNode) {
-                        notification.parentNode.removeChild(notification);
+                    if (popup.parentNode) {
+                        popup.parentNode.removeChild(popup);
                     }
                 }, 300);
             }, 3000);
             
-            // Add fadeOut animation
+            // Ensure fadeOut animation exists
             if (!document.querySelector('style#notification-styles')) {
-                const style = document.createElement('style');
-                style.id = 'notification-styles';
-                style.textContent = `
+                const notificationStyles = document.createElement('style');
+                notificationStyles.id = 'notification-styles';
+                notificationStyles.textContent = `
                     @keyframes fadeOut {
                         from { opacity: 1; transform: translateX(0); }
                         to { opacity: 0; transform: translateX(20px); }
                     }
                 `;
-                document.head.appendChild(style);
+                document.head.appendChild(notificationStyles);
             }
         }
 
-        // Initialize
+        // Main initialization
         document.addEventListener('DOMContentLoaded', function() {
-            // Start weather system
-            unloadWeather();
-            startWeather();
-            lastCheckedTime = getPDTTime().getHours();
+            // Start the weather system
+            stopWeather();
+            initializeWeather();
+            lastHourChecked = getCurrentPDTTime().getHours();
             
-            // Set up weather updates
-            setInterval(changeWeatherDirection, 15000);
+            // Set up periodic updates
+            setInterval(updateWindDirection, 15000); // Change wind every 15 seconds
+            
+            // Check for time changes every minute
             setInterval(() => {
-                const currentTime = getPDTTime().getHours();
-                if (currentTime !== lastCheckedTime) {
-                    lastCheckedTime = currentTime;
-                    const newWeatherType = getWeatherType();
-                    if (newWeatherType !== currentWeatherType) {
-                        unloadWeather();
-                        startWeather(newWeatherType);
+                const currentHour = getCurrentPDTTime().getHours();
+                if (currentHour !== lastHourChecked) {
+                    lastHourChecked = currentHour;
+                    const newWeatherType = selectWeatherType();
+                    if (newWeatherType !== activeWeatherType) {
+                        stopWeather();
+                        initializeWeather(newWeatherType);
                     }
                 }
             }, 60000);
             
-            // Initialize converter
-            initConverter();
+            // Initialize the converter
+            setupConverter();
             
-            // Update time every second
-            setInterval(getTimeOfDay, 1000);
+            // Keep time updated
+            setInterval(determineTimeOfDay, 1000);
         });
     </script>
 </body>
