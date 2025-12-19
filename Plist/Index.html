@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPA → plist Converter</title>
+    <link rel="icon" type="image/jpeg" href="https://i.imgur.com/Me2fimr.jpeg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #000;
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -3;
+            transition: background 2s ease-in-out;
+        }
+
+        .morning-bg {
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 200, 100, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(100, 180, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 220, 150, 0.05) 0%, transparent 50%);
+        }
+
+        .afternoon-bg {
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 165, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 200, 100, 0.05) 0%, transparent 50%);
+        }
+
+        .night-bg {
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(100, 120, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(180, 200, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 140, 255, 0.05) 0%, transparent 50%);
+        }
+
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.1'/%3E%3C/svg%3E");
+            z-index: -2;
+        }
+
+        #weather {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .raindrop {
+            position: absolute;
+            background: rgba(100, 180, 255, 0.6);
+            width: 1px;
+            height: 15px;
+            border-radius: 1px;
+            animation: fall linear forwards;
+        }
+
+        .leaf {
+            position: absolute;
+            font-size: 1.5rem;
+            user-select: none;
+            animation: fall linear forwards;
+            filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.3));
+        }
+
+        .snowflake {
+            position: absolute;
+            color: #ffffff;
+            font-size: 1.2rem;
+            user-select: none;
+            opacity: 0.8;
+            animation: fall linear forwards;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .time-indicator {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+        }
+
+        /* Hamburger Menu */
+        .hamburger-menu {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+        }
+
+        .hamburger-btn {
+            background: rgba(255, 107, 53, 0.2);
+            border: 1px solid rgba(255, 107, 53, 0.4);
+            border-radius: 15px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+        }
+
+        .hamburger-btn:hover {
+            background: rgba(255, 107, 53, 0.3);
+            border-color: rgba(255, 107, 53, 0.6);
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(255, 107, 53, 0.5);
+        }
+
+        .hamburger-line {
+            width: 25px;
+            height: 3px;
+            background: #ff6b35;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 5px rgba(255, 107, 53, 0.5);
+        }
+
+        .hamburger-btn:hover .hamburger-line {
+            background: #ff8e53;
+            box-shadow: 0 0 8px rgba(255, 107, 53, 0.7);
+        }
+
+        /* Dropdown Menu */
+        .dropdown-menu {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            background: rgba(255, 107, 53, 0.1);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            border-radius: 15px;
+            padding: 1rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 30px rgba(255, 107, 53, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            min-width: 180px;
+        }
+
+        .dropdown-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .menu-btn {
+            background: rgba(255, 107, 53, 0.1);
+            border: 1px solid rgba(255, 107, 53, 0.2);
+            border-radius: 10px;
+            padding: 1rem;
+            text-decoration: none;
+            color: #fff;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            width: 100%;
+            text-align: left;
+        }
+
+        .menu-btn:last-child {
+            margin-bottom: 0;
+        }
+
+        .menu-btn:hover {
+            background: rgba(255, 107, 53, 0.2);
+            border-color: rgba(255, 107, 53, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .btn-icon {
+            font-size: 1.2rem;
+            filter: drop-shadow(0 0 5px rgba(255, 107, 53, 0.5));
+        }
+
+        .btn-text {
+            flex: 1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .name {
+            font-size: 4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ff6b35 0%, #ff8e53 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+            text-shadow: 0 0 20px rgba(255, 107, 53, 0.5);
+        }
+
+        .title {
+            font-size: 1.2rem;
+            color: #ff8e53;
+            font-weight: 400;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(255, 142, 83, 0.3);
+        }
+
+        /* Converter Section */
+        .converter-section {
+            background: rgba(255, 107, 53, 0.05);
+            border: 1px solid rgba(255, 107, 53, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 800px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.1);
+            margin-bottom: 3rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 107, 53, 0.3);
+        }
+
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #ff6b35;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-shadow: 0 0 10px rgba(255, 107, 53, 0.5);
+        }
+
+        .live-dot {
+            width: 6px;
+            height: 6px;
+            background: #ff6b35;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 10px #ff6b35;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* Upload Zone */
+        .upload-zone {
+            border: 2px dashed rgba(255, 107, 53, 0.3);
+            border-radius: 15px;
+            padding: 3rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+            background: rgba(255, 107, 53, 0.03);
+        }
+
+        .upload-zone:hover {
+            border-color: rgba(255, 107, 53, 0.6);
+            background: rgba(255, 107, 53, 0.05);
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.1);
+        }
+
+        .upload-zone.dragover {
+            border-color: rgba(255, 107, 53, 0.8);
+            background: rgba(255, 107, 53, 0.1);
+            box-shadow: 0 0 30px rgba(255, 107, 53, 0.2);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #ff8e53;
+            filter: drop-shadow(0 0 10px rgba(255, 107, 53, 0.5));
+        }
+
+        .upload-text {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 107, 53, 0.3);
+        }
+
+        .upload-subtext {
+            color: #ffb38a;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Buttons */
+        .btn {
+            background: rgba(255, 107, 53, 0.2);
+            border: 1px solid rgba(255, 107, 53, 0.4);
+            border-radius: 10px;
+            padding: 0.8rem 1.5rem;
+            color: #fff;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(10px);
+            text-shadow: 0 0 5px rgba(255, 107, 53, 0.3);
+        }
+
+        .btn:hover:not(:disabled) {
+            background: rgba(255, 107, 53, 0.3);
+            border-color: rgba(255, 107, 53, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .btn-primary {
+            background: rgba(255, 107, 53, 0.3);
+            border-color: rgba(255, 107, 53, 0.6);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: rgba(255, 107, 53, 0.4);
+            border-color: rgba(255, 107, 53, 0.8);
+        }
+
+        /* Button Group */
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            height: 4px;
+            background: rgba(255, 107, 53, 0.1);
+            border-radius: 2px;
+            margin-top: 1rem;
+            overflow: hidden;
+            display: none;
+        }
+
+        .progress-container.show {
+            display: block;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b35, #ff8e53);
+            border-radius: 2px;
+            transition: width 0.5s ease;
+            width: 0%;
+            box-shadow: 0 0 10px #ff6b35;
+        }
+
+        /* File Info */
+        .file-info {
+            background: rgba(255, 107, 53, 0.03);
+            border: 1px solid rgba(255, 107, 53, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            display: none;
+        }
+
+        .file-info.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .info-row {
+            display: flex;
+            margin-bottom: 0.8rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid rgba(255, 107, 53, 0.1);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .info-label {
+            width: 140px;
+            color: #ffb38a;
+            font-size: 0.9rem;
+            text-shadow: 0 0 5px rgba(255, 107, 53, 0.2);
+        }
+
+        .info-value {
+            flex: 1;
+            color: #fff;
+            font-weight: 500;
+            word-break: break-word;
+            text-shadow: 0 0 5px rgba(255, 107, 53, 0.2);
+        }
+
+        /* plist Preview */
+        .plist-preview {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 107, 53, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .plist-preview.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .plist-code {
+            color: #f5f5f5;
+        }
+
+        .xml-tag { color: #569cd6; }
+        .xml-key { color: #9cdcfe; }
+        .xml-value { color: #ce9178; }
+        .xml-comment { color: #6a9955; }
+
+        /* Instructions */
+        .instructions {
+            background: rgba(255, 107, 53, 0.03);
+            border: 1px solid rgba(255, 107, 53, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .instructions h3 {
+            font-size: 1.1rem;
+            color: #fff;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px rgba(255, 107, 53, 0.3);
+        }
+
+        .instructions ol {
+            padding-left: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #ffb38a;
+        }
+
+        .instructions li {
+            margin-bottom: 0.5rem;
+        }
+
+        .code-block {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 107, 53, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.9rem;
+            color: #4ade80;
+            margin: 1rem 0;
+            overflow-x: auto;
+            text-shadow: 0 0 5px rgba(74, 222, 128, 0.3);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .status-online { background: #ff6b35; color: #ff6b35; }
+        .status-idle { background: #ffaa00; color: #ffaa00; }
+        .status-dnd { background: #ff4444; color: #ff4444; }
+        .status-offline { background: #888; color: #888; }
+
+        .footer {
+            margin-top: 3rem;
+            text-align: center;
+            color: #ff8e53;
+            font-size: 0.8rem;
+            text-shadow: 0 0 10px rgba(255, 142, 83, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+
+            .name {
+                font-size: 2.5rem;
+            }
+
+            .converter-section {
+                padding: 1.5rem;
+            }
+
+            .time-indicator {
+                top: 0.5rem;
+                right: 0.5rem;
+                font-size: 0.7rem;
+                padding: 0.3rem 0.7rem;
+            }
+
+            .hamburger-menu {
+                bottom: 1rem;
+                right: 1rem;
+            }
+
+            .hamburger-btn {
+                width: 55px;
+                height: 55px;
+            }
+
+            .dropdown-menu {
+                min-width: 160px;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hamburger-btn {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .hamburger-line {
+                width: 20px;
+            }
+
+            .dropdown-menu {
+                min-width: 140px;
+            }
+
+            .menu-btn {
+                padding: 0.8rem;
+                font-size: 0.9rem;
+            }
+
+            .info-row {
+                flex-direction: column;
+                gap: 0.3rem;
+            }
+
+            .info-label {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background afternoon-bg" id="background"></div>
+    <div class="noise"></div>
+    <div id="weather"></div>
+    <div class="time-indicator" id="timeIndicator">PDT: 04:21 PM</div>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="name">IPA → plist</h1>
+            <p class="title">iOS Distribution Manifest Generator</p>
+        </div>
+
+        <div class="converter-section">
+            <div class="section-header">
+                <div class="section-title">IPA Converter</div>
+                <div class="live-indicator">
+                    <div class="live-dot"></div>
+                    CLIENT-SIDE
+                </div>
+            </div>
+
+            <!-- Upload Zone -->
+            <div id="uploadZone" class="upload-zone">
+                <div class="upload-icon">
+                    📦
+                </div>
+                <div class="upload-text">Drop your IPA file here</div>
+                <div class="upload-subtext">or click to browse • .ipa files only</div>
+                <button class="btn btn-primary" id="browseBtn">
+                    📁 Select File
+                </button>
+                <input type="file" id="fileInput" accept=".ipa" style="display: none;">
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+
+            <!-- File Info -->
+            <div class="file-info" id="fileInfo">
+                <div class="info-row">
+                    <div class="info-label">App Name</div>
+                    <div class="info-value" id="infoName">—</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Bundle ID</div>
+                    <div class="info-value" id="infoBundle">—</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Version</div>
+                    <div class="info-value" id="infoVersion">—</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Build</div>
+                    <div class="info-value" id="infoBuild">—</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Min iOS</div>
+                    <div class="info-value" id="infoMinOS">—</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">File Size</div>
+                    <div class="info-value" id="infoSize">—</div>
+                </div>
+            </div>
+
+            <!-- Button Group -->
+            <div class="btn-group">
+                <button class="btn btn-primary" id="generateBtn" disabled>
+                    ⚙️ Generate plist
+                </button>
+                <button class="btn" id="downloadBtn" disabled>
+                    📥 Download
+                </button>
+                <button class="btn" id="resetBtn">
+                    🔄 Reset
+                </button>
+            </div>
+
+            <!-- plist Preview -->
+            <div class="plist-preview" id="plistPreview">
+                <pre class="plist-code" id="plistCode"><!-- Generated plist will appear here --></pre>
+            </div>
+
+            <!-- Instructions -->
+            <div class="instructions">
+                <h3>📋 Usage Instructions</h3>
+                <ol>
+                    <li>Upload your signed .ipa file</li>
+                    <li>Generate the distribution manifest</li>
+                    <li>Download the .plist file</li>
+                    <li>Host it on an HTTPS server</li>
+                    <li>Use the ITMS link for installation</li>
+                </ol>
+                
+                <div class="code-block" id="itmsLink">
+                    itms-services://?action=download-manifest&url=https://yourserver.com/manifest.plist
+                </div>
+                
+                <p style="color: #ffb38a; font-size: 0.9rem;">
+                    ⚠️ Remember to update the URL in the plist to point to your actual IPA file.
+                </p>
+            </div>
+        </div>
+
+        <div class="footer">
+            © 2025 IPA to plist Converter • Client-side processing • No data uploaded
+        </div>
+    </div>
+
+    <!-- Hamburger Menu -->
+    <div class="hamburger-menu">
+        <div class="hamburger-btn" id="hamburgerBtn">
+            <div class="hamburger-line"></div>
+            <div class="hamburger-line"></div>
+            <div class="hamburger-line"></div>
+        </div>
+        
+        <div class="dropdown-menu" id="dropdownMenu">
+            <a href="#" class="menu-btn" id="githubBtn">
+                <span class="btn-icon">🐙</span>
+                <span class="btn-text">GitHub</span>
+            </a>
+            <a href="#" class="menu-btn" id="docsBtn">
+                <span class="btn-icon">📚</span>
+                <span class="btn-text">Documentation</span>
+            </a>
+            <a href="#" class="menu-btn" id="donateBtn">
+                <span class="btn-icon">💝</span>
+                <span class="btn-text">Support</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Weather System (from blankboii website)
+        const weatherTypes = {
+            rain: {
+                create: createRaindrop,
+                types: ['raindrop'],
+                interval: 150,
+                directionRange: [-15, -10, -5, 0, 5, 10, 15],
+                duration: [3, 5]
+            },
+            leaves: {
+                create: createLeaf,
+                types: ['🍂', '🍁', '🥮', '🌰'],
+                interval: 400,
+                directionRange: [-20, -15, -10, -5, 0, 5, 10, 15, 20],
+                colors: ['#ff6b35', '#ff8e53', '#ffaa00', '#e65c00', '#ff4444'],
+                duration: [4, 7]
+            },
+            snow: {
+                create: createSnowflake,
+                types: ['❄', '❅', '❆'],
+                interval: 200,
+                directionRange: [-10, -8, -5, -3, 0, 3, 5, 8, 10],
+                duration: [5, 9]
+            }
+        };
+
+        let weatherDirection = 0;
+        let currentWeatherType = '';
+        let weatherInterval;
+        let lastCheckedTime = '';
+
+        // Converter State
+        let currentFile = null;
+        let fileData = {
+            name: 'MyApp',
+            bundleId: 'com.example.app',
+            version: '1.0',
+            build: '1',
+            minOS: '12.0',
+            size: '0 MB',
+            fileName: 'app.ipa'
+        };
+
+        // DOM Elements
+        const fileInput = document.getElementById('fileInput');
+        const uploadZone = document.getElementById('uploadZone');
+        const browseBtn = document.getElementById('browseBtn');
+        const generateBtn = document.getElementById('generateBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.getElementById('progressBar');
+        const fileInfo = document.getElementById('fileInfo');
+        const plistPreview = document.getElementById('plistPreview');
+        const plistCode = document.getElementById('plistCode');
+        const timeIndicator = document.getElementById('timeIndicator');
+        const itmsLink = document.getElementById('itmsLink');
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+
+        // Info elements
+        const infoName = document.getElementById('infoName');
+        const infoBundle = document.getElementById('infoBundle');
+        const infoVersion = document.getElementById('infoVersion');
+        const infoBuild = document.getElementById('infoBuild');
+        const infoMinOS = document.getElementById('infoMinOS');
+        const infoSize = document.getElementById('infoSize');
+
+        // Weather Functions
+        function getPDTTime() {
+            const now = new Date();
+            return new Date(now.toLocaleString("en-US", { timeZone: "America/Los_Angeles" }));
+        }
+
+        function getTimeOfDay() {
+            const pdtTime = getPDTTime();
+            const hours = pdtTime.getHours();
+            
+            const timeString = pdtTime.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: true 
+            });
+            timeIndicator.textContent = `PDT: ${timeString}`;
+            
+            if (hours >= 6 && hours < 12) {
+                return 'morning';
+            } else if (hours >= 12 && hours < 18) {
+                return 'afternoon';
+            } else {
+                return 'night';
+            }
+        }
+
+        function getWeatherType() {
+            const timeOfDay = getTimeOfDay();
+            
+            const background = document.getElementById('background');
+            background.className = 'background';
+            background.classList.add(`${timeOfDay}-bg`);
+            
+            switch(timeOfDay) {
+                case 'morning':
+                    return 'rain';
+                case 'afternoon':
+                    return 'leaves';
+                case 'night':
+                    return 'snow';
+                default:
+                    return 'leaves';
+            }
+        }
+
+        function createRaindrop() {
+            const raindrop = document.createElement('div');
+            raindrop.classList.add('raindrop');
+            
+            const startX = Math.random() * 100;
+            raindrop.style.left = startX + 'vw';
+            const durationRange = weatherTypes.rain.duration;
+            const duration = Math.random() * (durationRange[1] - durationRange[0]) + durationRange[0];
+            raindrop.style.animationDuration = duration + 's';
+            raindrop.style.opacity = Math.random() * 0.6 + 0.2;
+            raindrop.style.height = Math.random() * 10 + 10 + 'px';
+            raindrop.style.transform = `rotate(${weatherDirection}deg)`;
+            
+            document.getElementById('weather').appendChild(raindrop);
+            
+            setTimeout(() => {
+                if (raindrop.parentNode) {
+                    raindrop.remove();
+                }
+            }, duration * 1000 + 1000);
+        }
+
+        function createLeaf() {
+            const leaf = document.createElement('div');
+            leaf.classList.add('leaf');
+            
+            const leafType = weatherTypes.leaves.types[Math.floor(Math.random() * weatherTypes.leaves.types.length)];
+            leaf.innerHTML = leafType;
+            
+            const startX = Math.random() * 100;
+            leaf.style.left = startX + 'vw';
+            const durationRange = weatherTypes.leaves.duration;
+            const duration = Math.random() * (durationRange[1] - durationRange[0]) + durationRange[0];
+            leaf.style.animationDuration = duration + 's';
+            leaf.style.opacity = Math.random() * 0.7 + 0.3;
+            leaf.style.fontSize = (Math.random() * 10 + 15) + 'px';
+            
+            const sway = (Math.random() - 0.5) * 10;
+            leaf.style.transform = `rotate(${weatherDirection + sway}deg)`;
+            
+            const randomColor = weatherTypes.leaves.colors[Math.floor(Math.random() * weatherTypes.leaves.colors.length)];
+            leaf.style.color = randomColor;
+            
+            document.getElementById('weather').appendChild(leaf);
+            
+            setTimeout(() => {
+                if (leaf.parentNode) {
+                    leaf.remove();
+                }
+            }, duration * 1000 + 1000);
+        }
+
+        function createSnowflake() {
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
+            
+            const snowType = weatherTypes.snow.types[Math.floor(Math.random() * weatherTypes.snow.types.length)];
+            snowflake.innerHTML = snowType;
+            
+            const startX = Math.random() * 100;
+            snowflake.style.left = startX + 'vw';
+            const durationRange = weatherTypes.snow.duration;
+            const duration = Math.random() * (durationRange[1] - durationRange[0]) + durationRange[0];
+            snowflake.style.animationDuration = duration + 's';
+            snowflake.style.opacity = Math.random() * 0.8 + 0.2;
+            snowflake.style.fontSize = (Math.random() * 8 + 12) + 'px';
+            
+            const sway = (Math.random() - 0.5) * 5;
+            snowflake.style.transform = `rotate(${weatherDirection + sway}deg)`;
+            
+            document.getElementById('weather').appendChild(snowflake);
+            
+            setTimeout(() => {
+                if (snowflake.parentNode) {
+                    snowflake.remove();
+                }
+            }, duration * 1000 + 1000);
+        }
+
+        function unloadWeather() {
+            clearInterval(weatherInterval);
+            document.getElementById('weather').innerHTML = '';
+            currentWeatherType = '';
+        }
+
+        function startWeather(weatherType = null) {
+            const targetWeatherType = weatherType || getWeatherType();
+            currentWeatherType = targetWeatherType;
+            
+            weatherInterval = setInterval(() => {
+                weatherTypes[targetWeatherType].create();
+            }, weatherTypes[targetWeatherType].interval);
+        }
+
+        function changeWeatherDirection() {
+            const weatherType = getWeatherType();
+            const directions = weatherTypes[weatherType].directionRange;
+            weatherDirection = directions[Math.floor(Math.random() * directions.length)];
+            
+            const elements = document.querySelectorAll('#weather > div');
+            elements.forEach(element => {
+                const sway = element.classList.contains('leaf') ? (Math.random() - 0.5) * 10 : 
+                            element.classList.contains('snowflake') ? (Math.random() - 0.5) * 5 : 0;
+                element.style.transition = 'transform 2s ease-in-out';
+                element.style.transform = `rotate(${weatherDirection + sway}deg)`;
+            });
+        }
+
+        // Converter Functions
+        function initConverter() {
+            // Set up event listeners
+            browseBtn.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', handleFileSelect);
+            
+            uploadZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadZone.classList.add('dragover');
+            });
+            
+            uploadZone.addEventListener('dragleave', () => {
+                uploadZone.classList.remove('dragover');
+            });
+            
+            uploadZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadZone.classList.remove('dragover');
+                
+                if (e.dataTransfer.files.length > 0) {
+                    const file = e.dataTransfer.files[0];
+                    if (file.name.endsWith('.ipa')) {
+                        processFile(file);
+                    } else {
+                        showNotification('Please select a valid .ipa file', 'error');
+                    }
+                }
+            });
+            
+            generateBtn.addEventListener('click', generatePlist);
+            downloadBtn.addEventListener('click', downloadPlist);
+            resetBtn.addEventListener('click', resetConverter);
+            
+            // Hamburger menu
+            hamburgerBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                dropdownMenu.classList.toggle('active');
+            });
+            
+            document.addEventListener('click', function() {
+                dropdownMenu.classList.remove('active');
+            });
+            
+            dropdownMenu.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+            
+            // Menu buttons
+            document.getElementById('githubBtn').addEventListener('click', () => {
+                showNotification('GitHub repository coming soon!', 'info');
+            });
+            
+            document.getElementById('docsBtn').addEventListener('click', () => {
+                showNotification('Documentation coming soon!', 'info');
+            });
+            
+            document.getElementById('donateBtn').addEventListener('click', () => {
+                showNotification('Support options coming soon!', 'info');
+            });
+        }
+
+        function handleFileSelect(e) {
+            if (e.target.files.length > 0) {
+                processFile(e.target.files[0]);
+            }
+        }
+
+        function processFile(file) {
+            currentFile = file;
+            
+            // Show progress
+            progressContainer.classList.add('show');
+            progressBar.style.width = '30%';
+            
+            // Extract file info
+            const fileName = file.name.replace('.ipa', '');
+            const fileSize = formatFileSize(file.size);
+            
+            // Simulate processing
+            setTimeout(() => {
+                progressBar.style.width = '60%';
+                
+                // Generate realistic demo data
+                generateDemoData(fileName);
+                
+                // Update UI
+                fileData.size = fileSize;
+                updateFileInfo();
+                fileInfo.classList.add('show');
+                
+                // Enable generate button
+                generateBtn.disabled = false;
+                
+                // Complete progress
+                progressBar.style.width = '100%';
+                
+                setTimeout(() => {
+                    progressContainer.classList.remove('show');
+                    progressBar.style.width = '0%';
+                }, 500);
+                
+                showNotification('File analyzed successfully', 'success');
+            }, 800);
+        }
+
+        function generateDemoData(fileName) {
+            const apps = ['Nexus', 'Aurora', 'Zenith', 'Echo', 'Vortex', 'Nova', 'Orion', 'Phoenix'];
+            const domains = ['com', 'io', 'co', 'app', 'dev', 'tech'];
+            
+            const appName = apps[Math.floor(Math.random() * apps.length)];
+            const domain = domains[Math.floor(Math.random() * domains.length)];
+            
+            fileData.name = appName;
+            fileData.bundleId = `${domain}.${appName.toLowerCase()}.app`;
+            fileData.version = (Math.random() * 2 + 1).toFixed(1);
+            fileData.build = Math.floor(Math.random() * 100 + 1).toString();
+            fileData.minOS = (Math.floor(Math.random() * 5) + 11).toFixed(1);
+            fileData.fileName = fileName;
+        }
+
+        function updateFileInfo() {
+            infoName.textContent = fileData.name;
+            infoBundle.textContent = fileData.bundleId;
+            infoVersion.textContent = fileData.version;
+            infoBuild.textContent = fileData.build;
+            infoMinOS.textContent = `iOS ${fileData.minOS}+`;
+            infoSize.textContent = fileData.size;
+        }
+
+        function generatePlist() {
+            // Show progress
+            progressContainer.classList.add('show');
+            progressBar.style.width = '50%';
+            
+            setTimeout(() => {
+                // Generate plist content
+                const plistContent = generatePlistContent();
+                
+                // Update preview with syntax highlighting
+                updatePlistPreview(plistContent);
+                plistPreview.classList.add('show');
+                
+                // Update ITMS link
+                itmsLink.textContent = `itms-services://?action=download-manifest&url=https://your-server.com/${fileData.name.replace(/\s/g, '')}.plist`;
+                
+                // Enable download button
+                downloadBtn.disabled = false;
+                
+                // Complete progress
+                progressBar.style.width = '100%';
+                
+                setTimeout(() => {
+                    progressContainer.classList.remove('show');
+                    progressBar.style.width = '0%';
+                }, 500);
+                
+                showNotification('plist generated successfully', 'success');
+                
+                // Scroll to preview
+                plistPreview.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 600);
+        }
+
+        function generatePlistContent() {
+            return `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>items</key>
+    <array>
+        <dict>
+            <key>assets</key>
+            <array>
+                <dict>
+                    <key>kind</key>
+                    <string>software-package</string>
+                    <key>url</key>
+                    <string>https://your-server.com/path/to/app.ipa</string>
+                </dict>
+                <dict>
+                    <key>kind</key>
+                    <string>display-image</string>
+                    <key>url</key>
+                    <string>https://your-server.com/icon-57.png</string>
+                </dict>
+                <dict>
+                    <key>kind</key>
+                    <string>full-size-image</string>
+                    <key>url</key>
+                    <string>https://your-server.com/icon-512.png</string>
+                </dict>
+            </array>
+            <key>metadata</key>
+            <dict>
+                <key>bundle-identifier</key>
+                <string>${fileData.bundleId}</string>
+                <key>bundle-version</key>
+                <string>${fileData.version}</string>
+                <key>kind</key>
+                <string>software</string>
+                <key>title</key>
+                <string>${fileData.name}</string>
+                <key>subtitle</key>
+                <string>${fileData.name} App</string>
+                <key>platform-identifier</key>
+                <string>com.apple.platform.iphoneos</string>
+                <key>minimum-os-version</key>
+                <string>${fileData.minOS}</string>
+            </dict>
+        </dict>
+    </array>
+</dict>
+</plist>`;
+        }
+
+        function updatePlistPreview(content = null) {
+            if (!content) {
+                content = `<!-- plist preview will appear here -->
+<!-- Upload an IPA file to generate manifest -->`;
+            }
+            
+            // Simple syntax highlighting
+            const highlighted = content
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/(".*?")/g, '<span class="xml-value">$1</span>')
+                .replace(/&lt;(\/)?(\w+)&gt;/g, '&lt;<span class="xml-tag">$1$2</span>&gt;')
+                .replace(/&lt;key&gt;(.*?)&lt;\/key&gt;/g, '&lt;key&gt;<span class="xml-key">$1</span>&lt;/key&gt;')
+                .replace(/&lt;!--(.*?)--&gt;/g, '&lt;!--<span class="xml-comment">$1</span>--&gt;');
+            
+            plistCode.innerHTML = highlighted;
+        }
+
+        function downloadPlist() {
+            const plistContent = generatePlistContent();
+            const blob = new Blob([plistContent], { type: 'application/xml' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${fileData.name.replace(/\s/g, '_')}.plist`;
+            document.body.appendChild(a);
+            a.click();
+            
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 100);
+            
+            showNotification('plist downloaded successfully', 'success');
+        }
+
+        function resetConverter() {
+            currentFile = null;
+            fileInput.value = '';
+            
+            // Reset data
+            fileData = {
+                name: 'MyApp',
+                bundleId: 'com.example.app',
+                version: '1.0',
+                build: '1',
+                minOS: '12.0',
+                size: '0 MB',
+                fileName: 'app.ipa'
+            };
+            
+            // Reset UI
+            generateBtn.disabled = true;
+            downloadBtn.disabled = true;
+            fileInfo.classList.remove('show');
+            plistPreview.classList.remove('show');
+            progressContainer.classList.remove('show');
+            progressBar.style.width = '0%';
+            
+            // Reset info display
+            updateFileInfo();
+            updatePlistPreview();
+            itmsLink.textContent = 'itms-services://?action=download-manifest&url=https://yourserver.com/manifest.plist';
+            
+            showNotification('Converter reset', 'info');
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+        }
+
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'error' ? 'rgba(255, 68, 68, 0.9)' : 
+                            type === 'success' ? 'rgba(74, 222, 128, 0.9)' : 
+                            'rgba(255, 107, 53, 0.9)'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 10px;
+                font-size: 0.9rem;
+                z-index: 1000;
+                animation: fadeIn 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                backdrop-filter: blur(10px);
+                border: 1px solid ${type === 'error' ? 'rgba(255, 68, 68, 0.4)' : 
+                            type === 'success' ? 'rgba(74, 222, 128, 0.4)' : 
+                            'rgba(255, 107, 53, 0.4)'};
+                box-shadow: 0 0 20px ${type === 'error' ? 'rgba(255, 68, 68, 0.3)' : 
+                            type === 'success' ? 'rgba(74, 222, 128, 0.3)' : 
+                            'rgba(255, 107, 53, 0.3)'};
+            `;
+            
+            const icon = type === 'error' ? '❌' : 
+                        type === 'success' ? '✅' : 'ℹ️';
+            
+            notification.innerHTML = `
+                <span style="font-size: 1.2rem;">${icon}</span>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'fadeOut 0.3s ease';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+            
+            // Add fadeOut animation
+            if (!document.querySelector('style#notification-styles')) {
+                const style = document.createElement('style');
+                style.id = 'notification-styles';
+                style.textContent = `
+                    @keyframes fadeOut {
+                        from { opacity: 1; transform: translateX(0); }
+                        to { opacity: 0; transform: translateX(20px); }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Start weather system
+            unloadWeather();
+            startWeather();
+            lastCheckedTime = getPDTTime().getHours();
+            
+            // Set up weather updates
+            setInterval(changeWeatherDirection, 15000);
+            setInterval(() => {
+                const currentTime = getPDTTime().getHours();
+                if (currentTime !== lastCheckedTime) {
+                    lastCheckedTime = currentTime;
+                    const newWeatherType = getWeatherType();
+                    if (newWeatherType !== currentWeatherType) {
+                        unloadWeather();
+                        startWeather(newWeatherType);
+                    }
+                }
+            }, 60000);
+            
+            // Initialize converter
+            initConverter();
+            
+            // Update time every second
+            setInterval(getTimeOfDay, 1000);
+        });
+    </script>
+</body>
+</html>
