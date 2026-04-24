@@ -5,307 +5,213 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Links - Blankboii</title>
     <link rel="icon" type="image/jpeg" href="https://i.imgur.com/El3JhbL.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --accent-1: #0b1a2e;
+            --accent-2: #05101e;
+            --glass-bg: rgba(11, 26, 46, 0.05);
+            --glass-border: rgba(11, 26, 46, 0.45);
+            --radius: 24px;
+            --text-dim: #7a9cc6;
+            --text-bright: #c0d4e8;
         }
 
+        @font-face { font-family: 'SimSun'; src: local('SimSun'); }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; text-transform: lowercase; }
+
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: #000;
-            color: #fff;
-            min-height: 100vh;
+            font-family: 'SimSun', serif;
+            color: var(--text-bright);
+            height: 100vh;
+            overflow-y: auto;
             overflow-x: hidden;
         }
 
-        .background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -3;
-            transition: background 2s ease-in-out;
-        }
-
-        .morning-bg {
-            background: 
-                radial-gradient(circle at 20% 80%, rgba(228, 94, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(38, 125, 224, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(228, 94, 255, 0.05) 0%, transparent 50%);
-        }
-
-        .afternoon-bg {
-            background: 
-                radial-gradient(circle at 20% 80%, rgba(228, 94, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(38, 125, 224, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(228, 94, 255, 0.05) 0%, transparent 50%);
-        }
-
-        .night-bg {
-            background: 
-                radial-gradient(circle at 20% 80%, rgba(38, 125, 224, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(228, 94, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(38, 125, 224, 0.05) 0%, transparent 50%);
-        }
-
-        .noise {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.1'/%3E%3C/svg%3E");
+        .gradient-bg {
+            position: fixed; inset: 0;
+            background: linear-gradient(125deg, #000000, #030a14, #000a18);
+            background-size: 400% 400%;
+            animation: gradientFlow 16s ease infinite;
             z-index: -2;
+        }
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .noise-overlay {
+            position: fixed; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+            z-index: -1;
+            pointer-events: none;
         }
 
         #weather {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            position: fixed; inset: 0;
             pointer-events: none;
-            z-index: -1;
+            z-index: 0;
         }
 
-        .raindrop {
+        .raindrop, .leaf, .snowflake {
             position: absolute;
-            background: rgba(38, 125, 224, 0.6);
-            width: 1px;
-            height: 15px;
-            border-radius: 1px;
             animation: fall linear forwards;
-        }
-
-        .leaf {
-            position: absolute;
-            font-size: 1.5rem;
             user-select: none;
-            animation: fall linear forwards;
-            filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.3));
         }
-
-        .snowflake {
-            position: absolute;
-            color: #e45eff;
-            font-size: 1.2rem;
-            user-select: none;
-            opacity: 0.8;
-            animation: fall linear forwards;
-            text-shadow: 0 0 5px rgba(228, 94, 255, 0.5);
-        }
-
-        @keyframes fall {
-            to {
-                transform: translateY(100vh) rotate(360deg);
-                opacity: 0;
-            }
-        }
+        .raindrop { background: rgba(38,125,224,0.4); width: 1px; height: 14px; }
+        .leaf { font-size: 1.3rem; filter: drop-shadow(0 0 4px rgba(11,26,46,0.5)); }
+        .snowflake { color: #0b1a2e; font-size: 1.1rem; opacity: 0.5; text-shadow: 0 0 6px #0b1a2e; }
+        @keyframes fall { to { transform: translateY(100vh) rotate(360deg); opacity: 0; } }
 
         .time-indicator {
-            position: fixed;
-            top: 1rem;
-            right: 1rem;
-            background: rgba(228, 94, 255, 0.1);
-            border: 1px solid rgba(228, 94, 255, 0.2);
-            border-radius: 10px;
-            padding: 0.5rem 1rem;
-            font-size: 0.8rem;
-            backdrop-filter: blur(10px);
-            z-index: 1000;
+            position: fixed; bottom: 1rem; right: 1rem;
+            background: rgba(11,26,46,0.2); border: 1px solid rgba(11,26,46,0.5);
+            border-radius: 40px; padding: 0.3rem 0.8rem; font-size: 0.7rem;
+            backdrop-filter: blur(10px); z-index: 100; color: #7a9cc6;
+        }
+
+        .copyright-footer {
+            position: fixed; bottom: 1rem; left: 1rem;
+            font-size: 0.7rem; color: #7a9cc6; opacity: 0.5; letter-spacing: 0.5px;
+            z-index: 100; font-family: monospace;
         }
 
         .back-btn {
-            position: fixed;
-            top: 2rem;
-            left: 2rem;
-            background: rgba(228, 94, 255, 0.1);
-            border: 1px solid rgba(38, 125, 224, 0.3);
-            border-radius: 15px;
-            padding: 1rem 1.5rem;
-            text-decoration: none;
-            color: #fff;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 500;
-            box-shadow: 0 0 15px rgba(228, 94, 255, 0.2);
-            z-index: 1000;
+            position: fixed; top: 1.5rem; left: 1.5rem;
+            background: rgba(11,26,46,0.3); border: 1px solid var(--glass-border);
+            border-radius: 30px; padding: 0.5rem 1.2rem;
+            text-decoration: none; color: var(--text-dim);
+            font-size: 0.8rem; transition: 0.3s; backdrop-filter: blur(10px);
+            display: flex; align-items: center; gap: 0.4rem; z-index: 100;
         }
-
         .back-btn:hover {
-            background: rgba(228, 94, 255, 0.2);
-            border-color: rgba(38, 125, 224, 0.5);
-            transform: translateY(-2px);
-            box-shadow: 0 0 25px rgba(228, 94, 255, 0.4);
+            background: rgba(11,26,46,0.6);
+            color: #fff;
+            border-color: rgba(11,26,46,0.7);
+            box-shadow: 0 0 15px rgba(11,26,46,0.5);
         }
 
         .container {
-            max-width: 800px;
+            max-width: 500px;
             margin: 0 auto;
-            padding: 2rem;
-            min-height: 100vh;
+            padding: 6rem 2rem 4rem;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 2.5rem;
         }
-
         .name {
-            font-size: 3.5rem;
+            font-size: 2.8rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #e45eff 0%, #267de0 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.5rem;
-            letter-spacing: -0.02em;
-            text-shadow: 0 0 20px rgba(228, 94, 255, 0.5);
-        }
-
-        .title {
-            font-size: 1.1rem;
-            color: #a56eff;
-            font-weight: 400;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            text-shadow: 0 0 10px rgba(38, 125, 224, 0.3);
-        }
-
-        .links-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            width: 100%;
-            margin-bottom: 3rem;
-        }
-
-        .link-card {
-            background: rgba(228, 94, 255, 0.05);
-            border: 1px solid rgba(38, 125, 224, 0.2);
-            border-radius: 20px;
-            padding: 2rem;
-            text-decoration: none;
             color: #fff;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 0 20px rgba(228, 94, 255, 0.1);
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+        .title {
+            font-size: 0.9rem;
+            color: #7a9cc6;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
         }
 
-        .link-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(228, 94, 255, 0.5), transparent);
+        /* Single glass card containing all links */
+        .links-master-card {
+            background: rgba(3, 10, 20, 0.5);
+            backdrop-filter: blur(25px) saturate(200%);
+            -webkit-backdrop-filter: blur(25px) saturate(200%);
+            border: 1px solid rgba(11, 26, 46, 0.45);
+            border-radius: 24px;
+            width: 100%;
+            padding: 2rem 1.8rem;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.7), 0 0 0 1px rgba(11,26,46,0.15) inset;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
         }
 
-        .link-card:hover {
-            background: rgba(228, 94, 255, 0.1);
-            border-color: rgba(38, 125, 224, 0.4);
-            transform: translateY(-5px);
-            box-shadow: 0 0 30px rgba(228, 94, 255, 0.3);
-        }
-
-        .card-header {
+        .link-item {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
+            gap: 1.2rem;
+            padding: 0.8rem 1rem;
+            background: rgba(11, 26, 46, 0.08);
+            border: 1px solid rgba(11, 26, 46, 0.25);
+            border-radius: 14px;
+            text-decoration: none;
+            color: var(--text-bright);
+            transition: all 0.3s ease;
+        }
+        .link-item:hover {
+            background: rgba(11, 26, 46, 0.2);
+            border-color: rgba(11, 26, 46, 0.6);
+            transform: translateX(5px);
+            box-shadow: 0 0 15px rgba(11, 26, 46, 0.4);
         }
 
-        .card-icon {
-            font-size: 2rem;
-            filter: drop-shadow(0 0 10px rgba(228, 94, 255, 0.5));
+        .link-icon {
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            color: #1a3a5c;
+            background: rgba(11, 26, 46, 0.2);
+            border-radius: 12px;
+            flex-shrink: 0;
+            transition: 0.3s;
+        }
+        .link-item:hover .link-icon {
+            color: #fff;
+            background: rgba(11, 26, 46, 0.5);
+            box-shadow: 0 0 12px rgba(11,26,46,0.6);
         }
 
-        .card-title {
-            font-size: 1.3rem;
+        .link-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        .link-platform {
+            font-size: 1rem;
             font-weight: 600;
-            text-shadow: 0 0 10px rgba(228, 94, 255, 0.3);
+            color: #fff;
+            letter-spacing: 0.3px;
         }
-
-        .card-desc {
-            color: #b38aff;
-            font-size: 0.9rem;
-            line-height: 1.5;
+        .link-desc {
+            font-size: 0.75rem;
+            color: #7a9cc6;
+            line-height: 1.3;
         }
-
-        .card-username {
-            color: #a56eff;
-            font-size: 0.8rem;
-            margin-top: 0.5rem;
-            font-weight: 500;
-        }
-
-        .footer {
-            text-align: center;
-            color: #a56eff;
-            font-size: 0.8rem;
-            text-shadow: 0 0 10px rgba(38, 125, 224, 0.3);
+        .link-username {
+            font-size: 0.7rem;
+            color: #4a6a8a;
+            margin-top: 0.1rem;
         }
 
         @media (max-width: 768px) {
-            .container {
-                padding: 1.5rem;
-            }
-
-            .name {
-                font-size: 2.5rem;
-            }
-
-            .links-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-
-            .link-card {
-                padding: 1.5rem;
-            }
-
-            .back-btn {
-                top: 1rem;
-                left: 1rem;
-                padding: 0.8rem 1.2rem;
-                font-size: 0.9rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .name {
-                font-size: 2rem;
-            }
-
-            .card-header {
-                flex-direction: column;
-                text-align: center;
-                gap: 0.5rem;
-            }
+            .name { font-size: 2rem; }
+            .container { padding: 5rem 1.2rem 3rem; }
+            .links-master-card { padding: 1.5rem 1.2rem; }
         }
     </style>
 </head>
 <body>
-    <div class="background" id="background"></div>
-    <div class="noise"></div>
+    <div class="gradient-bg"></div>
+    <div class="noise-overlay"></div>
     <div id="weather"></div>
-    <div class="time-indicator" id="timeIndicator"></div>
+    <div class="time-indicator" id="timeIndicator">PDT: --:-- --</div>
+    <div class="copyright-footer">© 2025 blankboii. all rights reserved.</div>
 
     <a href="https://blankboii.xyz" class="back-btn">
-        ← Back to Home
+        <span>←</span> back
     </a>
 
     <div class="container">
@@ -314,290 +220,119 @@
             <p class="title">All My Links</p>
         </div>
 
-        <div class="links-grid">
-            <a href="https://www.reddit.com/user/BIankboii/" class="link-card">
-                <div class="card-header">
-                    <span class="card-icon">👽</span>
-                    <div class="card-title">Reddit</div>
+        <div class="links-master-card">
+            <!-- Reddit -->
+            <a href="https://www.reddit.com/user/BIankboii/" class="link-item">
+                <div class="link-icon"><i class="fab fa-reddit-alien"></i></div>
+                <div class="link-info">
+                    <div class="link-platform">Reddit</div>
+                    <div class="link-desc">Follow my Reddit profile for discussions and content</div>
+                    <div class="link-username">u/BIankboii</div>
                 </div>
-                <div class="card-desc">Follow my Reddit profile for discussions and content</div>
-                <div class="card-username">u/BIankboii</div>
             </a>
 
-            <a href="https://x.com/blan3bo1" class="link-card">
-                <div class="card-header">
-                    <span class="card-icon">🐦</span>
-                    <div class="card-title">Twitter</div>
+            <!-- Email -->
+            <a href="mailto:Blan3bo1@gmail.com" class="link-item">
+                <div class="link-icon"><i class="fas fa-envelope"></i></div>
+                <div class="link-info">
+                    <div class="link-platform">Email</div>
+                    <div class="link-desc">Send me an email for collaborations or questions</div>
+                    <div class="link-username">Blan3bo1@gmail.com</div>
                 </div>
-                <div class="card-desc">Follow me on Twitter for updates and thoughts</div>
-                <div class="card-username">@blan3bo1</div>
             </a>
 
-            <a href="https://discord.com/users/1353737272989581436" class="link-card">
-                <div class="card-header">
-                    <span class="card-icon">💬</span>
-                    <div class="card-title">Discord</div>
+            <!-- YouTube -->
+            <a href="https://m.youtube.com/channel/UCuVGMQxM9NSPl5h_hus390A" class="link-item">
+                <div class="link-icon"><i class="fab fa-youtube"></i></div>
+                <div class="link-info">
+                    <div class="link-platform">YouTube</div>
+                    <div class="link-desc">Subscribe to my YouTube channel for content</div>
+                    <div class="link-username">Blankboii</div>
                 </div>
-                <div class="card-desc">Connect with me on Discord for collaboration</div>
-                <div class="card-username">Blankboii</div>
             </a>
 
-            <a href="https://github.com/blan3bo1" class="link-card">
-                <div class="card-header">
-                    <span class="card-icon">💻</span>
-                    <div class="card-title">GitHub</div>
+            <!-- VRChat -->
+            <a href="https://vrchat.com/home/user/usr_62c416eb-9eb7-42f8-af08-a6ab39e4d1e6" class="link-item">
+                <div class="link-icon"><i class="fas fa-vr-cardboard"></i></div>
+                <div class="link-info">
+                    <div class="link-platform">VRChat</div>
+                    <div class="link-desc">Add me on VRChat to hang out in virtual worlds</div>
+                    <div class="link-username">Blankboii</div>
                 </div>
-                <div class="card-desc">Explore my code repositories and projects</div>
-                <div class="card-username">@blan3bo1</div>
             </a>
-
-            <a href="https://open.spotify.com/user/31rn6fe3mmxbcxelf6yxz7zvbysa?si=tBngSzkHTw2oqPLeqjENrw" class="link-card">
-                <div class="card-header">
-                    <span class="card-icon">🎵</span>
-                    <div class="card-title">Spotify</div>
-                </div>
-                <div class="card-desc">Check out my music taste and playlists</div>
-                <div class="card-username">Blankboii</div>
-            </a>
-
-            <a href="mailto:Blan3bo1@gmail.com" class="link-card">
-                <div class="card-header">
-                    <span class="card-icon">📧</span>
-                    <div class="card-title">Email</div>
-                </div>
-                <div class="card-desc">Send me an email for collaborations or questions</div>
-                <div class="card-username">Blan3bo1@gmail.com</div>
-            </a>
-
-            <a href="https://m.youtube.com/channel/UCuVGMQxM9NSPl5h_hus390A" class="link-card">
-                <div class="card-header">
-                    <span class="card-icon">📺</span>
-                    <div class="card-title">YouTube</div>
-                </div>
-                <div class="card-desc">Subscribe to my YouTube channel for content</div>
-                <div class="card-username">Blankboii</div>
-            </a>
-
-            <a href="https://vrchat.com/home/user/usr_62c416eb-9eb7-42f8-af08-a6ab39e4d1e6" class="link-card">
-                <div class="card-header">
-                    <span class="card-icon">🎮</span>
-                    <div class="card-title">VRChat</div>
-                </div>
-                <div class="card-desc">Add me on VRChat to hang out in virtual worlds</div>
-                <div class="card-username">Blankboii</div>
-            </a>
-        </div>
-
-        <div class="footer">
-            © 2025 Blankboii. All rights reserved.
         </div>
     </div>
 
     <script>
-        let weatherDirection = 0;
+        // ========== WEATHER (same as main site) ==========
         let currentWeatherType = '';
         let weatherInterval;
-        let lastCheckedTime = '';
-
-        // Weather types with MUCH SLOWER generation
         const weatherTypes = {
-            rain: {
-                create: createRaindrop,
-                types: ['raindrop'],
-                interval: 500,
-                directionRange: [-15, -10, -5, 0, 5, 10, 15],
-                duration: [8, 12]
-            },
-            leaves: {
-                create: createLeaf,
-                types: ['🍂', '🍁', '🥮', '🌰'],
-                interval: 800,
-                directionRange: [-20, -15, -10, -5, 0, 5, 10, 15, 20],
-                colors: ['#e45eff', '#a56eff', '#267de0', '#8f6eff', '#b38aff'],
-                duration: [10, 15]
-            },
-            snow: {
-                create: createSnowflake,
-                types: ['❄', '❅', '❆'],
-                interval: 600,
-                directionRange: [-10, -8, -5, -3, 0, 3, 5, 8, 10],
-                duration: [12, 18]
-            }
+            rain: { create: createRaindrop, interval: 500 },
+            leaves: { create: createLeaf, interval: 750 },
+            snow: { create: createSnowflake, interval: 600 }
         };
 
-        function getPDTTime() {
-            const now = new Date();
-            return new Date(now.toLocaleString("en-US", { timeZone: "America/Los_Angeles" }));
+        function getPDTTime() { return new Date(new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles" })); }
+        function updateTimeIndicator() {
+            const pdt = getPDTTime();
+            document.getElementById('timeIndicator').textContent = `PDT: ${pdt.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit', hour12:true })}`;
         }
+        setInterval(updateTimeIndicator, 1000); updateTimeIndicator();
 
-        function getTimeOfDay() {
-            const pdtTime = getPDTTime();
-            const hours = pdtTime.getHours();
-            
-            const timeString = pdtTime.toLocaleTimeString('en-US', { 
-                hour: '2-digit', 
-                minute: '2-digit',
-                hour12: true 
-            });
-            document.getElementById('timeIndicator').textContent = `PDT: ${timeString}`;
-            
-            if (hours >= 6 && hours < 12) {
-                return 'morning';
-            } else if (hours >= 12 && hours < 18) {
-                return 'afternoon';
-            } else {
-                return 'night';
-            }
-        }
-
-        function getWeatherType() {
-            const timeOfDay = getTimeOfDay();
-            
-            const background = document.getElementById('background');
-            background.className = 'background';
-            background.classList.add(`${timeOfDay}-bg`);
-            
-            switch(timeOfDay) {
-                case 'morning':
-                    return 'rain';
-                case 'afternoon':
-                    return 'leaves';
-                case 'night':
-                    return 'snow';
-                default:
-                    return 'leaves';
-            }
+        function getWeatherTypeByHour() {
+            const h = getPDTTime().getHours();
+            return (h>=6 && h<12) ? 'rain' : (h>=12 && h<18) ? 'leaves' : 'snow';
         }
 
         function createRaindrop() {
-            const raindrop = document.createElement('div');
-            raindrop.classList.add('raindrop');
-            
-            const startX = Math.random() * 100;
-            raindrop.style.left = startX + 'vw';
-            const durationRange = weatherTypes.rain.duration;
-            const duration = Math.random() * (durationRange[1] - durationRange[0]) + durationRange[0];
-            raindrop.style.animationDuration = duration + 's';
-            raindrop.style.opacity = Math.random() * 0.6 + 0.2;
-            raindrop.style.height = Math.random() * 10 + 10 + 'px';
-            raindrop.style.transform = `rotate(${weatherDirection}deg)`;
-            
-            document.getElementById('weather').appendChild(raindrop);
-            
-            setTimeout(() => {
-                if (raindrop.parentNode) {
-                    raindrop.remove();
-                }
-            }, duration * 1000 + 1000);
+            const d = document.createElement('div'); d.className = 'raindrop';
+            d.style.left = Math.random()*100+'vw';
+            const dur = Math.random()*6+7;
+            d.style.animationDuration = dur+'s';
+            d.style.opacity = Math.random()*0.3+0.2;
+            d.style.height = Math.random()*12+8+'px';
+            document.getElementById('weather').appendChild(d);
+            setTimeout(()=>d.remove(), dur*1000+500);
         }
-
         function createLeaf() {
-            const leaf = document.createElement('div');
-            leaf.classList.add('leaf');
-            
-            const leafType = weatherTypes.leaves.types[Math.floor(Math.random() * weatherTypes.leaves.types.length)];
-            leaf.innerHTML = leafType;
-            
-            const startX = Math.random() * 100;
-            leaf.style.left = startX + 'vw';
-            const durationRange = weatherTypes.leaves.duration;
-            const duration = Math.random() * (durationRange[1] - durationRange[0]) + durationRange[0];
-            leaf.style.animationDuration = duration + 's';
-            leaf.style.opacity = Math.random() * 0.7 + 0.3;
-            leaf.style.fontSize = (Math.random() * 10 + 15) + 'px';
-            
-            const sway = (Math.random() - 0.5) * 10;
-            leaf.style.transform = `rotate(${weatherDirection + sway}deg)`;
-            
-            const randomColor = weatherTypes.leaves.colors[Math.floor(Math.random() * weatherTypes.leaves.colors.length)];
-            leaf.style.color = randomColor;
-            
-            document.getElementById('weather').appendChild(leaf);
-            
-            setTimeout(() => {
-                if (leaf.parentNode) {
-                    leaf.remove();
-                }
-            }, duration * 1000 + 1000);
+            const d = document.createElement('div'); d.className = 'leaf';
+            d.innerHTML = ['🍂','🍁','🥮','🌰'][Math.floor(Math.random()*4)];
+            d.style.left = Math.random()*100+'vw';
+            const dur = Math.random()*8+8;
+            d.style.animationDuration = dur+'s';
+            d.style.opacity = Math.random()*0.4+0.3;
+            d.style.fontSize = (Math.random()*12+18)+'px';
+            document.getElementById('weather').appendChild(d);
+            setTimeout(()=>d.remove(), dur*1000+500);
         }
-
         function createSnowflake() {
-            const snowflake = document.createElement('div');
-            snowflake.classList.add('snowflake');
-            
-            const snowType = weatherTypes.snow.types[Math.floor(Math.random() * weatherTypes.snow.types.length)];
-            snowflake.innerHTML = snowType;
-            
-            const startX = Math.random() * 100;
-            snowflake.style.left = startX + 'vw';
-            const durationRange = weatherTypes.snow.duration;
-            const duration = Math.random() * (durationRange[1] - durationRange[0]) + durationRange[0];
-            snowflake.style.animationDuration = duration + 's';
-            snowflake.style.opacity = Math.random() * 0.8 + 0.2;
-            snowflake.style.fontSize = (Math.random() * 8 + 12) + 'px';
-            
-            const sway = (Math.random() - 0.5) * 5;
-            snowflake.style.transform = `rotate(${weatherDirection + sway}deg)`;
-            
-            document.getElementById('weather').appendChild(snowflake);
-            
-            setTimeout(() => {
-                if (snowflake.parentNode) {
-                    snowflake.remove();
-                }
-            }, duration * 1000 + 1000);
+            const d = document.createElement('div'); d.className = 'snowflake';
+            d.innerHTML = ['❄','❅','❆'][Math.floor(Math.random()*3)];
+            d.style.left = Math.random()*100+'vw';
+            const dur = Math.random()*10+10;
+            d.style.animationDuration = dur+'s';
+            d.style.opacity = Math.random()*0.4+0.2;
+            d.style.fontSize = (Math.random()*8+14)+'px';
+            document.getElementById('weather').appendChild(d);
+            setTimeout(()=>d.remove(), dur*1000+500);
         }
-
-        function unloadWeather() {
-            clearInterval(weatherInterval);
-            document.getElementById('weather').innerHTML = '';
-            currentWeatherType = '';
+        function startWeather(type) {
+            if (weatherInterval) clearInterval(weatherInterval);
+            currentWeatherType = type || getWeatherTypeByHour();
+            weatherInterval = setInterval(() => { weatherTypes[currentWeatherType].create(); }, weatherTypes[currentWeatherType].interval);
         }
-
-        function checkAndUpdateWeather() {
-            const currentTime = getPDTTime().getHours();
-            
-            if (currentTime !== lastCheckedTime) {
-                lastCheckedTime = currentTime;
-                const newWeatherType = getWeatherType();
-                
-                if (newWeatherType !== currentWeatherType) {
-                    unloadWeather();
-                    startWeather(newWeatherType);
-                }
+        setInterval(() => {
+            const newType = getWeatherTypeByHour();
+            if (newType !== currentWeatherType) {
+                if (weatherInterval) clearInterval(weatherInterval);
+                document.getElementById('weather').innerHTML = '';
+                startWeather(newType);
             }
-        }
+        }, 60000);
 
-        function startWeather(weatherType = null) {
-            const targetWeatherType = weatherType || getWeatherType();
-            currentWeatherType = targetWeatherType;
-            
-            weatherInterval = setInterval(() => {
-                weatherTypes[targetWeatherType].create();
-            }, weatherTypes[targetWeatherType].interval);
-        }
-
-        function changeWeatherDirection() {
-            const weatherType = getWeatherType();
-            const directions = weatherTypes[weatherType].directionRange;
-            weatherDirection = directions[Math.floor(Math.random() * directions.length)];
-            
-            const elements = document.querySelectorAll('#weather > div');
-            elements.forEach(element => {
-                const sway = element.classList.contains('leaf') ? (Math.random() - 0.5) * 10 : 
-                            element.classList.contains('snowflake') ? (Math.random() - 0.5) * 5 : 0;
-                element.style.transition = 'transform 2s ease-in-out';
-                element.style.transform = `rotate(${weatherDirection + sway}deg)`;
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            unloadWeather();
-            startWeather();
-            lastCheckedTime = getPDTTime().getHours();
-            
-            setInterval(changeWeatherDirection, 15000);
-            setInterval(checkAndUpdateWeather, 60000);
+        document.addEventListener('DOMContentLoaded', () => {
+            startWeather(getWeatherTypeByHour());
         });
     </script>
 </body>
