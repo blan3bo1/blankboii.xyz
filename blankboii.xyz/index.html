@@ -8,11 +8,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --accent-1: #e45eff;
-            --accent-2: #267de0;
-            --glass-bg: rgba(228, 94, 255, 0.03);
-            --glass-border: rgba(38, 125, 224, 0.25);
+            --accent-1: #0b1a2e;
+            --accent-2: #05101e;
+            --glass-bg: rgba(11, 26, 46, 0.05);
+            --glass-border: rgba(11, 26, 46, 0.45);
             --radius: 24px;
+            --text-dim: #7a9cc6;
+            --text-bright: #c0d4e8;
         }
 
         @font-face { font-family: 'SimSun'; src: local('SimSun'); }
@@ -22,20 +24,16 @@
         body {
             background: #000;
             font-family: 'SimSun', serif;
-            color: #fff;
+            color: var(--text-bright);
             height: 100vh;
             overflow: hidden;
         }
 
-        /* hidden audio player */
-        #bg-audio {
-            display: none;
-        }
+        #bg-audio { display: none; }
 
-        /* animated gradient background */
         .gradient-bg {
             position: fixed; inset: 0;
-            background: linear-gradient(125deg, #0a0a0a, #1a0f2a, #0c1a2f);
+            background: linear-gradient(125deg, #000000, #030a14, #000a18);
             background-size: 400% 400%;
             animation: gradientFlow 16s ease infinite;
             z-index: -2;
@@ -54,7 +52,6 @@
             pointer-events: none;
         }
 
-        /* weather particles */
         #weather {
             position: fixed; inset: 0;
             pointer-events: none;
@@ -66,12 +63,11 @@
             animation: fall linear forwards;
             user-select: none;
         }
-        .raindrop { background: rgba(38,125,224,0.5); width: 1px; height: 14px; }
-        .leaf { font-size: 1.3rem; filter: drop-shadow(0 0 4px rgba(228,94,255,0.4)); }
-        .snowflake { color: #e45eff; font-size: 1.1rem; opacity: 0.5; text-shadow: 0 0 6px #e45eff; }
+        .raindrop { background: rgba(38,125,224,0.4); width: 1px; height: 14px; }
+        .leaf { font-size: 1.3rem; filter: drop-shadow(0 0 4px rgba(11,26,46,0.5)); }
+        .snowflake { color: #0b1a2e; font-size: 1.1rem; opacity: 0.5; text-shadow: 0 0 6px #0b1a2e; }
         @keyframes fall { to { transform: translateY(100vh) rotate(360deg); opacity: 0; } }
 
-        /* landing */
         #landing {
             position: fixed; inset: 0;
             background: #000;
@@ -82,7 +78,6 @@
         #typing-start { font-size: 16px; letter-spacing: 4px; color: #fff; }
         @keyframes shake { 0%,100%{ transform:translate(0,0); } 25%{ transform:translate(1px,-1px); } 75%{ transform:translate(-1px,1px); } }
 
-        /* main content */
         #main-content {
             height: 100vh; display: none;
             justify-content: center; align-items: center;
@@ -91,24 +86,22 @@
 
         .container-wrapper { position: relative; display: flex; align-items: center; }
 
-        /* LIQUID GLASS CARD */
         .bio-card {
-            background: rgba(10, 5, 20, 0.4);
+            background: rgba(3, 10, 20, 0.55);
             backdrop-filter: blur(25px) saturate(200%);
             -webkit-backdrop-filter: blur(25px) saturate(200%);
             border: 1px solid var(--glass-border);
-            width: 480px; padding: 45px 45px 35px 45px; 
+            width: 480px; padding: 45px 45px 35px 45px;
             border-radius: var(--radius);
             z-index: 2;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.8), 0 0 0 1px rgba(228,94,255,0.1) inset;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.9), 0 0 0 1px rgba(11,26,46,0.2) inset;
         }
 
-        /* sidebar */
         .social-sidebar {
             position: absolute; left: 100%;
-            background: rgba(38, 125, 224, 0.08);
+            background: rgba(5, 16, 30, 0.6);
             backdrop-filter: blur(15px);
-            border: 1px solid rgba(228,94,255,0.25);
+            border: 1px solid rgba(11,26,46,0.4);
             border-left: none;
             height: 210px; width: 52px;
             border-radius: 0 var(--radius) var(--radius) 0;
@@ -118,250 +111,162 @@
         }
         .container-wrapper:hover .social-sidebar { transform: translateX(0px); opacity: 1; }
         .side-icon { color: #fff; opacity: 0.6; font-size: 18px; transition: 0.3s; text-decoration: none; }
-        .side-icon:hover { opacity: 1; transform: scale(1.1); filter: drop-shadow(0 0 8px #e45eff); }
+        .side-icon:hover { opacity: 1; transform: scale(1.1); filter: drop-shadow(0 0 8px #0b1a2e); }
 
-        /* header */
         .card-header { display: flex; align-items: center; gap: 25px; margin-bottom: 30px; }
         .pfp-container { position: relative; width: 80px; height: 80px; }
         .pfp-glow {
             position: absolute; inset: -4px; border-radius: 50%;
-            background: conic-gradient(from 0deg, transparent, #e45eff, #267de0, transparent);
+            background: conic-gradient(from 0deg, transparent, #0b1a2e, #05101e, transparent);
             animation: spin 3.5s linear infinite; opacity: 0; transition: 0.6s ease;
         }
         .pfp-container:hover .pfp-glow { opacity: 1; }
         .pfp-img {
             position: relative; width: 100%; height: 100%;
             border-radius: 50%; object-fit: cover;
-            border: 1px solid rgba(228,94,255,0.5); z-index: 2; background: #0a0a0a;
+            border: 1px solid rgba(11,26,46,0.6); z-index: 2; background: #0a0a0a;
         }
 
         .username { font-size: 26px; color: #fff; letter-spacing: 1px; display: flex; align-items: center; gap: 6px; }
-        .username i { color: #267de0; font-size: 14px; filter: drop-shadow(0 0 5px #e45eff); }
+        .username i { color: #3a5a80; font-size: 14px; filter: drop-shadow(0 0 5px #0b1a2e); }
 
-        .guild-tag {
-            font-size: 10px; color: #b38aff; opacity: 0.8;
-            font-family: monospace; letter-spacing: 1px; margin-top: 3px;
+        .custom-status-line {
+            font-size: 11px; color: #7a9cc6; opacity: 0.85; margin-top: 5px;
+            display: flex; align-items: center; gap: 6px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;
         }
+        .custom-status-line img { width: 18px; height: 18px; object-fit: contain; }
+        .custom-status-emoji { font-size: 15px; }
 
-        /* status indicator line */
         .status-row {
-            margin: 20px 0 18px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 12px;
-            color: #c7aaff;
-            border-bottom: 1px dashed rgba(228,94,255,0.2);
-            padding-bottom: 18px;
+            margin: 20px 0 18px; display: flex; align-items: center; gap: 10px;
+            font-size: 12px; color: #7a9cc6;
+            border-bottom: 1px dashed rgba(11,26,46,0.4); padding-bottom: 18px;
         }
-        .status-dot {
-            width: 8px; height: 8px;
-            border-radius: 50%;
-            background: #888;
-            box-shadow: 0 0 8px currentColor;
-        }
-        .status-online { background: #e45eff; color: #e45eff; box-shadow: 0 0 10px #e45eff; }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #888; box-shadow: 0 0 8px currentColor; }
+        .status-online { background: #2a4a6e; color: #2a4a6e; box-shadow: 0 0 10px #2a4a6e; }
         .status-idle { background: #ffaa00; color: #ffaa00; }
         .status-dnd { background: #ff4444; color: #ff4444; }
 
-        /* activity feed */
         .activity-feed {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            margin: 20px 0 20px;
-            max-height: 160px;
-            overflow-y: auto;
-            padding-right: 8px;
-            scrollbar-width: thin;
-            scrollbar-color: #e45eff #1a0f2a;
+            display: flex; flex-direction: column; gap: 16px; margin: 20px 0 20px;
+            max-height: 160px; overflow-y: auto; padding-right: 8px;
+            scrollbar-width: thin; scrollbar-color: #0b1a2e #030a14;
         }
-        .activity-feed::-webkit-scrollbar {
-            width: 4px;
-        }
-        .activity-feed::-webkit-scrollbar-track {
-            background: #1a0f2a;
-        }
-        .activity-feed::-webkit-scrollbar-thumb {
-            background: #e45eff;
-            border-radius: 4px;
-        }
+        .activity-feed::-webkit-scrollbar { width: 4px; }
+        .activity-feed::-webkit-scrollbar-track { background: #030a14; }
+        .activity-feed::-webkit-scrollbar-thumb { background: #0b1a2e; border-radius: 4px; }
 
         .activity-item {
+            display: flex; align-items: center; gap: 12px; font-size: 12px;
+            padding: 8px 10px;
+            background: rgba(11,26,46,0.08);
+            border: 1px solid rgba(11,26,46,0.3);
+            border-radius: 12px; transition: 0.2s;
+        }
+        .activity-item:hover { background: rgba(11,26,46,0.15); border-color: rgba(11,26,46,0.5); }
+
+        .activity-icon {
+            width: 32px; height: 32px;
+            display: flex; align-items: center; justify-content: center;
+            color: #7a9cc6; font-size: 18px; flex-shrink: 0;
+        }
+        .activity-icon img {
+            width: 32px; height: 32px; border-radius: 4px; object-fit: cover;
+        }
+
+        .activity-content { flex: 1; line-height: 1.4; }
+        .activity-name { font-weight: 600; color: #fff; font-size: 12px; }
+        .activity-detail { color: #7a9cc6; font-size: 10px; letter-spacing: 0.3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px; }
+        .no-activity { color: #7a9cc6; text-align: center; padding: 16px; font-size: 11px; opacity: 0.7; font-style: italic; }
+
+        .spotify-progress { margin-top: 6px; }
+        .spotify-bar { width: 100%; height: 2px; background: rgba(11,26,46,0.4); border-radius: 2px; overflow: hidden; }
+        .spotify-fill { height: 100%; background: linear-gradient(90deg, #1a3a5c, #0b1a2e); width: 0%; transition: width 1s linear; }
+        .spotify-times { display: flex; justify-content: space-between; color: #7a9cc6; font-size: 8px; margin-top: 3px; }
+
+        .bio-typing-area {
+            height: 52px; margin: 20px 0 18px; color: #7a9cc6;
+            font-size: 13px; opacity: 0.9; line-height: 1.5; border-left: 2px solid #0b1a2e; padding-left: 14px;
+        }
+
+        .footer-ui {
+            margin-top: 24px; padding-top: 20px;
+            border-top: 1px solid rgba(11,26,46,0.4);
+            display: flex;
+            align-items: center;
+            /* No justify-content, so the music player stays on the left */
+        }
+
+        /* Music */
+        .music-player {
             display: flex;
             align-items: center;
             gap: 12px;
+            color: #7a9cc6;
+            font-size: 11px;
+        }
+        .music-controls {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .music-btn {
+            background: none;
+            border: 1px solid rgba(11,26,46,0.5);
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #7a9cc6;
             font-size: 12px;
-            padding: 8px 10px;
-            background: rgba(228,94,255,0.03);
-            border: 1px solid rgba(38,125,224,0.15);
-            border-radius: 12px;
+            cursor: pointer;
             transition: 0.2s;
+            background: rgba(11,26,46,0.2);
         }
-        .activity-item:hover {
-            background: rgba(228,94,255,0.08);
-            border-color: rgba(228,94,255,0.3);
-        }
-        .activity-icon {
-            width: 24px;
-            text-align: center;
-            color: #e45eff;
-            font-size: 14px;
-        }
-        .activity-content {
-            flex: 1;
-            line-height: 1.4;
-        }
-        .activity-name {
-            font-weight: 600;
+        .music-btn:hover {
+            background: rgba(11,26,46,0.5);
             color: #fff;
-            font-size: 12px;
+            box-shadow: 0 0 10px rgba(11,26,46,0.6);
         }
-        .activity-detail {
-            color: #b38aff;
-            font-size: 10px;
-            letter-spacing: 0.3px;
-            white-space: nowrap;
+        .album-spin {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(11,26,46,0.7);
+            animation: spin 6s linear infinite;
+            box-shadow: 0 0 12px rgba(11,26,46,0.5);
+        }
+        .song-title {
+            max-width: 100px;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 220px;
-        }
-        .custom-status-emoji {
-            font-size: 16px;
-            margin-right: 4px;
-            vertical-align: middle;
-        }
-        .no-activity {
-            color: #b38aff;
-            text-align: center;
-            padding: 16px;
-            font-size: 11px;
-            opacity: 0.7;
-            font-style: italic;
+            white-space: nowrap;
+            color: #7a9cc6;
         }
 
-        /* spotify mini-progress */
-        .spotify-progress {
-            margin-top: 6px;
-        }
-        .spotify-bar {
-            width: 100%;
-            height: 2px;
-            background: rgba(38,125,224,0.2);
-            border-radius: 2px;
-            overflow: hidden;
-        }
-        .spotify-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #e45eff, #267de0);
-            width: 0%;
-            transition: width 1s linear;
-        }
-        .spotify-times {
-            display: flex;
-            justify-content: space-between;
-            color: #b38aff;
-            font-size: 8px;
-            margin-top: 3px;
-        }
-
-        /* typing bio area */
-        .bio-typing-area { 
-            height: 52px; margin: 20px 0 18px; color: #d1b3ff; 
-            font-size: 13px; opacity: 0.9; line-height: 1.5; border-left: 2px solid #e45eff; padding-left: 14px;
-        }
-
-        /* footer */
-        .footer-ui {
-            margin-top: 24px; padding-top: 20px;
-            border-top: 1px solid rgba(228,94,255,0.2);
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .vol-control { 
-            display: flex; 
-            align-items: center; 
-            gap: 8px; 
-            font-size: 10px; 
-            color: #b38aff;
-        }
-        /* fixed volume slider styling */
-        input[type="range"] { 
-            -webkit-appearance: none; 
-            background: transparent; 
-            height: 4px; 
-            width: 70px; 
-            cursor: crosshair;
-        }
-        input[type="range"]::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 3px;
-            background: rgba(38,125,224,0.3);
-            border-radius: 3px;
-        }
-        input[type="range"]::-webkit-slider-thumb { 
-            -webkit-appearance: none; 
-            width: 10px; 
-            height: 10px; 
-            background: #e45eff; 
-            border-radius: 0; 
-            margin-top: -3.5px;
-            box-shadow: 0 0 8px #e45eff;
-            cursor: crosshair;
-        }
-        input[type="range"]::-moz-range-track {
-            width: 100%;
-            height: 3px;
-            background: rgba(38,125,224,0.3);
-            border-radius: 3px;
-        }
-        input[type="range"]::-moz-range-thumb {
-            width: 10px;
-            height: 10px;
-            background: #e45eff;
-            border: none;
-            border-radius: 0;
-            cursor: crosshair;
-        }
-
-        .views-box { display: flex; align-items: center; gap: 5px; font-size: 11px; opacity: 0.6; color: #b38aff; }
-
-        /* copyright footer */
         .copyright-footer {
-            position: fixed;
-            bottom: 1rem;
-            left: 1rem;
-            font-size: 0.7rem;
-            color: #b38aff;
-            opacity: 0.5;
-            letter-spacing: 0.5px;
-            z-index: 100;
-            font-family: monospace;
+            position: fixed; bottom: 1rem; left: 1rem;
+            font-size: 0.7rem; color: #7a9cc6; opacity: 0.5; letter-spacing: 0.5px;
+            z-index: 100; font-family: monospace;
         }
 
-        /* animations */
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes blink { 50% { opacity: 0; } }
-
-        /* time indicator */
         .time-indicator {
             position: fixed; bottom: 1rem; right: 1rem;
-            background: rgba(228,94,255,0.1);
-            border: 1px solid rgba(38,125,224,0.3);
-            border-radius: 40px;
-            padding: 0.3rem 0.8rem;
-            font-size: 0.7rem;
-            backdrop-filter: blur(10px);
-            z-index: 100;
-            color: #b38aff;
+            background: rgba(11,26,46,0.2); border: 1px solid rgba(11,26,46,0.5);
+            border-radius: 40px; padding: 0.3rem 0.8rem; font-size: 0.7rem;
+            backdrop-filter: blur(10px); z-index: 100; color: #7a9cc6;
         }
+
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes blink { 50% { opacity: 0; } }
     </style>
 </head>
 <body>
-    <!-- Hidden audio element with loop - using MP3 for better compatibility -->
-    <audio id="bg-audio" loop>
-        <source src="https://files.catbox.moe/zmmgpr.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
+    <audio id="bg-audio"></audio>
 
     <div class="gradient-bg"></div>
     <div class="noise-overlay"></div>
@@ -369,14 +274,12 @@
     <div class="time-indicator" id="timeIndicator">PDT: --:-- --</div>
     <div class="copyright-footer">© 2025 blankboii. all rights reserved.</div>
 
-    <!-- landing page -->
     <div id="landing" onclick="enterSite()">
         <div class="shake-box">
-            <span id="typing-start"></span><span style="border-left: 2px solid #e45eff; margin-left: 5px; animation: blink 0.7s infinite;"></span>
+            <span id="typing-start"></span><span style="border-left: 2px solid #1a3a5c; margin-left: 5px; animation: blink 0.7s infinite;"></span>
         </div>
     </div>
 
-    <!-- main content -->
     <div id="main-content">
         <div class="container-wrapper">
             <div class="bio-card">
@@ -389,7 +292,7 @@
                         <div class="username" onclick="copyUID()">
                             Blank <i class="fa-solid fa-circle-check"></i>
                         </div>
-                        <div class="guild-tag" id="guild-tag">MIKE</div>
+                        <div class="custom-status-line" id="custom-status-line"></div>
                     </div>
                 </div>
 
@@ -400,22 +303,22 @@
                 </div>
 
                 <div class="bio-typing-area shake-box">
-                    <span id="typing-bio"></span><span style="border-left: 1px solid #e45eff; margin-left: 3px; animation: blink 0.9s infinite;"></span>
+                    <span id="typing-bio"></span><span style="border-left: 1px solid #1a3a5c; margin-left: 3px; animation: blink 0.9s infinite;"></span>
                 </div>
 
-                <!-- dynamic activity feed -->
                 <div id="activity-feed" class="activity-feed">
                     <div class="no-activity">fetching status...</div>
                 </div>
 
                 <div class="footer-ui">
-                    <div class="vol-control">
-                        <i class="fa-solid fa-volume-off" id="vol-icon"></i>
-                        <input type="range" id="vol" min="0" max="1" step="0.01" value="0.3">
-                    </div>
-                    <div class="views-box">
-                        <i class="fa-regular fa-eye"></i>
-                        <span id="views-counter" class="lottery-text">0</span>
+                    <div class="music-player">
+                        <div class="music-controls">
+                            <button class="music-btn" id="prev-btn" title="Previous"><i class="fa-solid fa-backward"></i></button>
+                            <button class="music-btn" id="play-btn" title="Play/Pause"><i class="fa-solid fa-play"></i></button>
+                            <button class="music-btn" id="next-btn" title="Next"><i class="fa-solid fa-forward"></i></button>
+                        </div>
+                        <img src="" alt="album art" class="album-spin" id="album-cover">
+                        <span class="song-title" id="current-song-title"></span>
                     </div>
                 </div>
             </div>
@@ -431,49 +334,105 @@
     </div>
 
     <script>
-        // --- user data ---
         const DISCORD_ID = '1353737272989581436';
-        const GUILD_TAG = "MIKE";
 
-        // --- REAL VIEW COUNTER ---
-        let views = localStorage.getItem('siteViews');
-        if (views === null) views = 1;
-        else views = parseInt(views) + 1;
-        localStorage.setItem('siteViews', views);
-        function formatViews(num) { return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
-        document.getElementById('views-counter').textContent = formatViews(views);
-
-        // --- audio element and volume control ---
-        const audio = document.getElementById('bg-audio');
-        const volSlider = document.getElementById('vol');
-        const volIcon = document.getElementById('vol-icon');
-
-        // Set initial volume
-        audio.volume = 0.3;
-
-        // Volume slider control
-        volSlider.addEventListener('input', (e) => {
-            const val = e.target.value;
-            audio.volume = val;
-            
-            // Update icon based on volume
-            if (val == 0) {
-                volIcon.className = 'fa-solid fa-volume-off';
-            } else if (val < 0.33) {
-                volIcon.className = 'fa-solid fa-volume-low';
-            } else if (val < 0.66) {
-                volIcon.className = 'fa-solid fa-volume';
-            } else {
-                volIcon.className = 'fa-solid fa-volume-high';
+        // PLAYLIST
+        const tracks = [
+            {
+                title: "Means to an end",
+                src: "https://files.catbox.moe/7ub316.mp3",
+                cover: "https://files.catbox.moe/pf6i72.jpeg"   
+            },
+            {
+                title: "I lied on the test at the doctor's office",
+                src: "https://files.catbox.moe/o0tc18.mp3",
+                cover: "https://files.catbox.moe/rj10te.jpeg"
+            },
+            {
+                title: "Aluminium oxide",
+                src: "https://files.catbox.moe/bswdpr.mp3",
+                cover: "https://files.catbox.moe/uevph5.jpeg"   
+            },
+            {
+                title: "I know",
+                src: "https://files.catbox.moe/drj23e.mp3",
+                cover: "https://files.catbox.moe/uevph5.jpeg"   
             }
-        });
+        ];
 
-        // Play audio when user enters site (to comply with autoplay policies)
-        function playAudio() {
-            audio.play().catch(e => console.log('Audio play failed:', e));
+        let currentTrackIndex = 0;
+        let isPlaying = false;
+
+        // Audio element
+        const audio = document.getElementById('bg-audio');
+        const playBtn = document.getElementById('play-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const albumCoverEl = document.getElementById('album-cover');
+        const songTitleEl = document.getElementById('current-song-title');
+
+        // Load track
+        function loadTrack(index) {
+            if (index < 0) index = tracks.length - 1;
+            if (index >= tracks.length) index = 0;
+            currentTrackIndex = index;
+            const track = tracks[index];
+            audio.src = track.src;
+            albumCoverEl.src = track.cover;
+            songTitleEl.textContent = track.title;
+            audio.load();
         }
 
-        // --- typing engine ---
+        // Play/Pause toggle
+        function togglePlay() {
+            if (isPlaying) {
+                audio.pause();
+                playBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
+                isPlaying = false;
+            } else {
+                const playPromise = audio.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(e => console.log('Playback error:', e));
+                }
+                playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+                isPlaying = true;
+            }
+        }
+
+        // Next/Prev
+        function nextTrack() {
+            loadTrack(currentTrackIndex + 1);
+            if (isPlaying) audio.play();
+        }
+        function prevTrack() {
+            loadTrack(currentTrackIndex - 1);
+            if (isPlaying) audio.play();
+        }
+
+        // Button listeners
+        playBtn.addEventListener('click', togglePlay);
+        nextBtn.addEventListener('click', nextTrack);
+        prevBtn.addEventListener('click', prevTrack);
+
+        // When track ends, play next
+        audio.addEventListener('ended', () => {
+            nextTrack();
+        });
+
+        // Update play/pause icon on play/pause events
+        audio.addEventListener('play', () => {
+            playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+            isPlaying = true;
+        });
+        audio.addEventListener('pause', () => {
+            playBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
+            isPlaying = false;
+        });
+
+        // Init first track
+        loadTrack(0);
+
+        // ========== TYPING ENGINE ==========
         function setupTyping(elementId, phrases) {
             let p = 0, c = 0, d = false;
             const el = document.getElementById(elementId);
@@ -486,16 +445,10 @@
             }
             type();
         }
+        setupTyping("typing-start", ["I'm Too Tired", "Sleep :3", "I'm Asleep, so don't ask", "Blank"]);
+        setupTyping("typing-bio", ["Sleeping ngl is the best."]);
 
-        setupTyping("typing-start", [
-            "I'm Too Tired", "Sleep :3", "I'm Asleep, so don't ask", "Blank"
-        ]);
-
-        setupTyping("typing-bio", [
-            "Sleeping ngl is the best."
-        ]);
-
-        // --- enter site ---
+        // Enter site
         function enterSite() {
             document.getElementById('landing').style.opacity = '0';
             setTimeout(() => {
@@ -504,57 +457,61 @@
                 m.style.display = 'flex';
                 setTimeout(() => m.style.opacity = '1', 50);
                 startWeather();
-                playAudio(); // Start audio when entering site
+                // Auto-play first song on site entry (user interaction allowed)
+                if (!isPlaying) togglePlay();
             }, 1000);
         }
+
+        // Touch fix for mobile
+        document.addEventListener('touchstart', function initAudio() {
+            if (!isPlaying) togglePlay();
+        }, { once: true });
 
         function copyUID() {
             navigator.clipboard.writeText("1353737272989581436");
             alert("user id copied");
         }
 
-        // --- weather particles ---
-        let weatherDirection = 0;
+        // ========== WEATHER ==========
         let currentWeatherType = '';
         let weatherInterval;
-
         const weatherTypes = {
-            rain: { create: createRaindrop, interval: 500, directionRange: [-12,-8,-4,0,4,8,12], duration: [9,13] },
-            leaves: { create: createLeaf, types: ['🍂','🍁','🥮','🌰'], interval: 750, directionRange: [-18,-12,-6,0,6,12,18], colors: ['#e45eff','#a56eff','#267de0','#b38aff'], duration: [11,16] },
-            snow: { create: createSnowflake, types: ['❄','❅','❆'], interval: 600, directionRange: [-8,-5,-3,0,3,5,8], duration: [13,19] }
+            rain: { create: createRaindrop, interval: 500 },
+            leaves: { create: createLeaf, interval: 750 },
+            snow: { create: createSnowflake, interval: 600 }
         };
 
         function getPDTTime() { return new Date(new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles" })); }
         function updateTimeIndicator() {
             const pdt = getPDTTime();
-            const str = pdt.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit', hour12:true });
-            document.getElementById('timeIndicator').textContent = `PDT: ${str}`;
+            document.getElementById('timeIndicator').textContent = `PDT: ${pdt.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit', hour12:true })}`;
         }
-        setInterval(updateTimeIndicator, 1000); updateTimeIndicator();
+        setInterval(updateTimeIndicator, 1000);
+        updateTimeIndicator();
 
-        function getWeatherTypeByHour() { const h=getPDTTime().getHours(); return (h>=6&&h<12)?'rain':(h>=12&&h<18)?'leaves':'snow'; }
-        function createRaindrop() { 
+        function getWeatherTypeByHour() {
+            const h = getPDTTime().getHours();
+            return (h>=6 && h<12) ? 'rain' : (h>=12 && h<18) ? 'leaves' : 'snow';
+        }
+
+        function createRaindrop() {
             const d = document.createElement('div'); d.className = 'raindrop';
             d.style.left = Math.random()*100+'vw';
             const dur = Math.random()*6+7;
             d.style.animationDuration = dur+'s';
-            d.style.opacity = Math.random()*0.4+0.2;
+            d.style.opacity = Math.random()*0.3+0.2;
             d.style.height = Math.random()*12+8+'px';
-            d.style.transform = `rotate(${weatherDirection}deg)`;
             document.getElementById('weather').appendChild(d);
             setTimeout(()=>d.remove(), dur*1000+500);
         }
         function createLeaf() {
             const d = document.createElement('div'); d.className = 'leaf';
-            d.innerHTML = weatherTypes.leaves.types[Math.floor(Math.random()*weatherTypes.leaves.types.length)];
+            d.innerHTML = ['🍂','🍁','🥮','🌰'][Math.floor(Math.random()*4)];
             d.style.left = Math.random()*100+'vw';
             const dur = Math.random()*8+8;
             d.style.animationDuration = dur+'s';
-            d.style.opacity = Math.random()*0.5+0.3;
+            d.style.opacity = Math.random()*0.4+0.3;
             d.style.fontSize = (Math.random()*12+18)+'px';
-            const sway = (Math.random()-0.5)*12;
-            d.style.transform = `rotate(${weatherDirection+sway}deg)`;
-            d.style.color = weatherTypes.leaves.colors[Math.floor(Math.random()*weatherTypes.leaves.colors.length)];
             document.getElementById('weather').appendChild(d);
             setTimeout(()=>d.remove(), dur*1000+500);
         }
@@ -564,29 +521,26 @@
             d.style.left = Math.random()*100+'vw';
             const dur = Math.random()*10+10;
             d.style.animationDuration = dur+'s';
-            d.style.opacity = Math.random()*0.5+0.2;
+            d.style.opacity = Math.random()*0.4+0.2;
             d.style.fontSize = (Math.random()*8+14)+'px';
-            const sway = (Math.random()-0.5)*6;
-            d.style.transform = `rotate(${weatherDirection+sway}deg)`;
             document.getElementById('weather').appendChild(d);
             setTimeout(()=>d.remove(), dur*1000+500);
         }
         function startWeather(type) {
             if (weatherInterval) clearInterval(weatherInterval);
-            currentWeatherType = type;
-            weatherInterval = setInterval(() => { weatherTypes[type].create(); }, weatherTypes[type].interval);
+            currentWeatherType = type || getWeatherTypeByHour();
+            weatherInterval = setInterval(() => { weatherTypes[currentWeatherType].create(); }, weatherTypes[currentWeatherType].interval);
         }
-        function updateWeatherByTime() {
+        setInterval(() => {
             const newType = getWeatherTypeByHour();
             if (newType !== currentWeatherType) {
                 if (weatherInterval) clearInterval(weatherInterval);
                 document.getElementById('weather').innerHTML = '';
                 startWeather(newType);
             }
-        }
-        setInterval(updateWeatherByTime, 60000);
+        }, 60000);
 
-        // --- DISCORD INTEGRATION (UPDATED TO EVERY SECOND) ---
+        // ========== DISCORD (Lanyard) ==========
         async function fetchDiscordStatus() {
             try {
                 const r = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`);
@@ -596,8 +550,22 @@
             } catch { showFallbackActivities(); }
         }
 
+        function getActivityImageUrl(activity) {
+            if (!activity.assets || !activity.assets.large_image) return null;
+            const asset = activity.assets.large_image;
+            if (asset.startsWith('spotify:')) {
+                return `https://i.scdn.co/image/${asset.replace('spotify:', '')}`;
+            }
+            if (asset.startsWith('mp:')) {
+                return `https://media.discordapp.net/${asset.replace('mp:', '')}`;
+            }
+            if (activity.application_id) {
+                return `https://cdn.discordapp.com/app-assets/${activity.application_id}/${asset}.png?size=40`;
+            }
+            return null;
+        }
+
         function updateDiscordUI(data) {
-            // update status dot
             const dot = document.getElementById('status-dot');
             const statusText = document.getElementById('status-text');
             dot.className = 'status-dot';
@@ -607,14 +575,30 @@
                 case 'dnd': dot.classList.add('status-dnd'); statusText.textContent = 'dnd'; break;
                 default: statusText.textContent = 'offline';
             }
-            // update avatar if possible
+
             if (data.discord_user?.avatar) {
                 document.getElementById('discord-avatar').src = 
                     `https://cdn.discordapp.com/avatars/${DISCORD_ID}/${data.discord_user.avatar}.png?size=256`;
             }
-            // build activity feed
-            const activities = data.activities || [];
-            updateActivitiesFeed(activities);
+
+            const customLine = document.getElementById('custom-status-line');
+            const customActivity = data.activities?.find(a => a.type === 4);
+            if (customActivity) {
+                let inner = '';
+                if (customActivity.emoji) {
+                    if (customActivity.emoji.id) {
+                        inner += `<img src="https://cdn.discordapp.com/emojis/${customActivity.emoji.id}.png" alt="${customActivity.emoji.name}" style="width:18px;height:18px;">`;
+                    } else {
+                        inner += `<span class="custom-status-emoji">${customActivity.emoji.name}</span>`;
+                    }
+                }
+                inner += customActivity.state || '';
+                customLine.innerHTML = inner || '&nbsp;';
+            } else {
+                customLine.innerHTML = '&nbsp;';
+            }
+
+            updateActivitiesFeed(data.activities || []);
         }
 
         function updateActivitiesFeed(activities) {
@@ -626,34 +610,26 @@
 
             let html = '';
             activities.slice(0, 4).forEach(act => {
-                const type = act.type;
-                let icon = '⏺️';
-                if (type === 0) icon = '🎮';
-                else if (type === 1) icon = '📺';
-                else if (type === 2) icon = '🎵';
-                else if (type === 3) icon = '👀';
-                else if (type === 4) icon = '💬';
-                else if (type === 5) icon = '🏆';
+                if (act.type === 4) return;
 
-                let content = '';
-                if (type === 4) { // custom status
-                    let emojiHtml = '';
-                    if (act.emoji) {
-                        if (act.emoji.id) {
-                            emojiHtml = `<img src="https://cdn.discordapp.com/emojis/${act.emoji.id}.${act.emoji.animated?'gif':'png'}?size=20" style="width:16px; height:16px; vertical-align:middle; margin-right:4px;">`;
-                        } else {
-                            emojiHtml = `<span class="custom-status-emoji">${act.emoji.name}</span>`;
-                        }
-                    }
-                    content = `<div class="activity-name">${emojiHtml}${act.state || 'custom status'}</div>`;
+                const imageUrl = getActivityImageUrl(act);
+                let iconHtml = '';
+                if (imageUrl) {
+                    iconHtml = `<img src="${imageUrl}" alt="activity icon" onerror="this.style.display='none'; this.parentElement.innerHTML='🎮';">`;
                 } else {
-                    content = `<div class="activity-name">${act.name}</div>`;
-                    if (act.details) content += `<div class="activity-detail">${act.details}</div>`;
-                    if (act.state) content += `<div class="activity-detail">${act.state}</div>`;
+                    let icon = '⏺️';
+                    if (act.type === 0) icon = '🎮';
+                    else if (act.type === 1) icon = '📺';
+                    else if (act.type === 3) icon = '👀';
+                    else if (act.type === 5) icon = '🏆';
+                    iconHtml = icon;
                 }
 
-                // spotify progress
-                if (type === 2 && act.timestamps && act.timestamps.start && act.timestamps.end) {
+                let content = `<div class="activity-name">${act.name}</div>`;
+                if (act.details) content += `<div class="activity-detail">${act.details}</div>`;
+                if (act.state) content += `<div class="activity-detail">${act.state}</div>`;
+
+                if (act.type === 2 && act.timestamps?.start && act.timestamps.end) {
                     const now = Date.now();
                     const total = act.timestamps.end - act.timestamps.start;
                     const elapsed = now - act.timestamps.start;
@@ -669,36 +645,31 @@
                                 <span>${format(elapsed)}</span>
                                 <span>${format(total)}</span>
                             </div>
-                        </div>
-                    `;
+                        </div>`;
                 }
 
                 html += `
                     <div class="activity-item">
-                        <div class="activity-icon">${icon}</div>
+                        <div class="activity-icon">${iconHtml}</div>
                         <div class="activity-content">${content}</div>
-                    </div>
-                `;
+                    </div>`;
             });
-            feed.innerHTML = html;
+            feed.innerHTML = html || '<div class="no-activity">no active status</div>';
         }
 
         function showFallbackActivities() {
+            document.getElementById('custom-status-line').innerHTML = '&nbsp;';
             document.getElementById('activity-feed').innerHTML = `
                 <div class="activity-item"><div class="activity-icon">💻</div><div class="activity-content"><div class="activity-name">offline</div><div class="activity-detail">status unavailable</div></div></div>
                 <div class="activity-item"><div class="activity-icon">🎵</div><div class="activity-content"><div class="activity-name">spotify</div><div class="activity-detail">not playing</div></div></div>
             `;
         }
 
-        // initial fetch + periodic (NOW EVERY SECOND)
         document.addEventListener('DOMContentLoaded', () => {
             currentWeatherType = getWeatherTypeByHour();
             startWeather(currentWeatherType);
             fetchDiscordStatus();
-            setInterval(fetchDiscordStatus, 1000); // UPDATED TO 1000ms (1 second)
-            
-            // Preload audio but don't play yet (will play on enter)
-            audio.load();
+            setInterval(fetchDiscordStatus, 1000);
         });
     </script>
 </body>
